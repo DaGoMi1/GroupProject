@@ -14,7 +14,8 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/login", "/login_process","/"
+                        .requestMatchers("/login", "/login_process",
+                                "/", "/home", "/home/send-email"
                         ).permitAll()
                         .requestMatchers("/notice/write", "/notice/setting",
                                 "/notice/voteStart").hasRole("ADMIN")
@@ -22,12 +23,12 @@ public class SecurityConfig {
                 );
 
         http
-                .formLogin((auth) -> auth.loginPage("/login")
+                .formLogin((auth) -> auth.loginPage("/home")
                         .loginProcessingUrl("/loginProc")
-                        .failureUrl("/login-error")
-                        .defaultSuccessUrl("/")
+                        .failureUrl("/home?error=true")
+                        .defaultSuccessUrl("/main")
                         .successHandler((request, response, authentication) ->
-                                response.sendRedirect("/"))
+                                response.sendRedirect("/main"))
                         .permitAll()
                 );
 
