@@ -2,65 +2,65 @@ package DataView.project.domain;
 
 
 import jakarta.persistence.*;
+import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import java.util.*;
+import java.util.stream.Collectors;
+
+@Builder
+@Setter
+@Getter
 @Entity
-public class Member {
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
+public class Member implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
 
-    private String userNumber;
+    @Column(nullable = false)
+    private String username;
 
+    @Column(nullable = false)
     private String password;
 
     private String name;
 
     private String email;
 
-    private String role;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Builder.Default
+    private Set<String> roles = new HashSet<>();
 
-    public Long getId() {
-        return Id;
-    }
-    public void setId(Long Id) {
-        this.Id = Id;
-    }
 
-    public String getUserNumber() {
-        return userNumber;
-    }
-
-    public void setUserNumber(String userNumber) {
-        this.userNumber = userNumber;
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this.roles.stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
     }
 
-    public String getPassword() {
-        return password;
-    }
-    public void setPassword(String password) {
-        this.password = password;
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
     }
 
-    public String getName() {
-        return name;
-    }
-    public void setName(String name) {
-        this.name = name;
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
     }
 
-    public String getEmail() {
-        return email;
-    }
-    public void setEmail(String email) {
-        this.email = email;
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
     }
 
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }
