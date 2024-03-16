@@ -1,10 +1,9 @@
 package DataView.project.controller;
 
 import DataView.project.service.EmailService;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
 @RequestMapping("/home")
 public class HomeController {
 
@@ -37,5 +36,9 @@ public class HomeController {
             return "Error: " + e.getMessage(); // 실패 시 에러 메시지를 포함한 문자열 리턴
         }
     }
+
+
+
+
 
 }
