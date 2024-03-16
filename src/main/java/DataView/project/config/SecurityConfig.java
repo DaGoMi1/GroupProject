@@ -23,8 +23,8 @@ public class SecurityConfig {
                 );
 
         http
-                .formLogin((auth) -> auth.loginPage("/home")
-                        .loginProcessingUrl("/loginProc")
+                .formLogin((auth) -> auth.loginPage("/home") //우리가 만들어서 쓸 로그인 페이지 경로
+                        .loginProcessingUrl("/user/login") //로그인 요청 받을 주소
                         .failureUrl("/home?error=true")
                         .defaultSuccessUrl("/main")
                         .successHandler((request, response, authentication) ->
