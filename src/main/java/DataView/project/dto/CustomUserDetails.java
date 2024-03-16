@@ -1,6 +1,7 @@
 package DataView.project.dto;
 
 import DataView.project.domain.Member;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,18 +9,15 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class CustomUserDetails implements UserDetails {
-
-    private final Member member;
-
-    public CustomUserDetails(Member member) {
-        this.member = member;
-    }
+@Getter
+public record CustomUserDetails(Member member) implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(member.getRole()));
+        for (String role : member.getRoles()) {
+            authorities.add(new SimpleGrantedAuthority(role));
+        }
         return authorities;
     }
 
@@ -30,11 +28,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return member.getUserNumber();
-    }
-
-    public Member getMember() {
-        return member;
+        return member.getUsername();
     }
 
     @Override
