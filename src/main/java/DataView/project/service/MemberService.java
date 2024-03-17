@@ -14,8 +14,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import java.util.HashSet;
-import java.util.Set;
 
 public class MemberService implements UserDetailsService {
     private final SDJpaMemberRepository memberRepository;
@@ -53,15 +51,14 @@ public class MemberService implements UserDetailsService {
         member.setPassword(bCryptPasswordEncoder.encode(member.getPassword()));
 
         // 사용자의 기본 권한 설정
-        Set<String> roles = new HashSet<>();
-        roles.add("ROLE_USER");
+        String role = "ROLE_USER";
 
         // 특정 사용자에게 추가 권한 부여
         if (member.getUsername().equals("DSYJ")) {
-            roles.add("ROLE_ADMIN");
+            role = "ROLE_ADMIN";
         }
 
-        member.setRoles(roles);
+        member.setRole(role);
 
         memberRepository.save(member);
     }

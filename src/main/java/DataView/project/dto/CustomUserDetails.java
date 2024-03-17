@@ -1,24 +1,18 @@
 package DataView.project.dto;
 
 import DataView.project.domain.Member;
-import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 
-@Getter
 public record CustomUserDetails(Member member) implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        Collection<GrantedAuthority> authorities = new ArrayList<>();
-        for (String role : member.getRoles()) {
-            authorities.add(new SimpleGrantedAuthority(role));
-        }
-        return authorities;
+        return Collections.singleton(new SimpleGrantedAuthority(member.getRole()));
     }
 
     @Override

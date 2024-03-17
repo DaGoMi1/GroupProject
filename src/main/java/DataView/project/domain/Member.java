@@ -8,7 +8,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Builder
 @Setter
@@ -32,16 +31,11 @@ public class Member implements UserDetails {
 
     private String email;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @Builder.Default
-    private Set<String> roles = new HashSet<>();
-
+    private String role;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.roles.stream()
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+        return Collections.singleton(new SimpleGrantedAuthority(this.role));
     }
 
     @Override
