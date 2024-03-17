@@ -21,8 +21,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/login", "/login_process",
-                                "/", "/home", "/home/send-email", "/members/sign-in"
+                        .requestMatchers("/home/**"
                         ).permitAll()
                         .requestMatchers("/notice/write", "/notice/setting",
                                 "/notice/voteStart").hasRole("ADMIN")
@@ -54,7 +53,7 @@ public class SecurityConfig {
 
         http
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
-                        UsernamePasswordAuthenticationFilter.class).build();
+                        UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

@@ -2,7 +2,6 @@ package DataView.project.service;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import lombok.Getter;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 
@@ -56,6 +55,5 @@ public class EmailService {
         return Instant.now().minusSeconds(EXPIRATION_TIME_SECONDS).isBefore(timestamp);
     }
 
-    @Getter
         private record AuthInfo(int authCode, Instant timestamp){}
 }
