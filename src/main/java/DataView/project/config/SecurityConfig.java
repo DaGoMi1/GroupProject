@@ -1,22 +1,16 @@
 package DataView.project.config;
 
-import DataView.project.filter.JwtAuthenticationFilter;
-import lombok.RequiredArgsConstructor;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
-@EnableWebSecurity
-@RequiredArgsConstructor
 public class SecurityConfig {
-    private final JwtTokenProvider jwtTokenProvider;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -29,31 +23,42 @@ public class SecurityConfig {
                 );
 
         http
+                .formLogin((auth) -> auth.loginPage("/home")
+                        .loginProcessingUrl("/home/user/login")
+                        .successHandler((request, response, authentication) -> { // 로그인 성공 시 핸들러
+                            response.setStatus(HttpServletResponse.SC_OK);
+                            response.getWriter().write("{\"message\": \"로그인 성공\"}");
+                        })
+                        .failureHandler((request, response, exception) -> { // 로그인 실패 시 핸들러
+                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                            response.getWriter().write("{\"message\": \"로그인 실패\"}");
+                        })
+                );
+
+        http
                 .logout((auth) -> auth
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/home")
+                        .logoutSuccessUrl("/")
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
                         .permitAll()
                 );
 
         http
-                .sessionManagement(sessionManagement -> sessionManagement
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS));//
+                .sessionManagement((auth) -> auth
+                        .maximumSessions(1)
+                        .maxSessionsPreventsLogin(true));
 
         http
-                .csrf(AbstractHttpConfigurer::disable);//
+                .sessionManagement((auth) -> auth
+                        .sessionFixation().changeSessionId());
 
         http
-                .httpBasic(AbstractHttpConfigurer::disable);//
+                .csrf(AbstractHttpConfigurer::disable);
 
         http
                 .exceptionHandling(configurer -> configurer
                         .accessDeniedPage("/error/access-denied"));
-
-        http
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
-                        UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
