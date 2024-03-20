@@ -6,6 +6,7 @@ import DataView.project.repository.SDJpaMemberRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -27,7 +28,7 @@ public class MemberService implements UserDetailsService {
 
         member.setPassword(bCryptPasswordEncoder.encode(member.getPassword()));
         member.setRole("ROLE_USER");
-        if(member.getUserNumber().equals("DSYJ")){
+        if (member.getUserNumber().equals("DSYJ")) {
             member.setRole("ROLE_ADMIN");
         }
 
@@ -62,5 +63,15 @@ public class MemberService implements UserDetailsService {
         existingMember.setPassword(member.getPassword());
 
         memberRepository.save(existingMember);
+    }
+
+    @Transactional
+    public void updatePassword(String username, String newPassword) {
+        Member member = memberRepository.findByUserNumber(username)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+
+        member.setPassword(bCryptPasswordEncoder.encode(newPassword));
+
+        memberRepository.save(member);
     }
 }
