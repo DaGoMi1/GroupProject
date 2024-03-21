@@ -1,9 +1,13 @@
 package DataView.project.controller;
 
 import DataView.project.domain.Posting;
+import DataView.project.dto.BoardTypeRequest;
 import DataView.project.service.PostingService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/posting")
@@ -15,15 +19,23 @@ public class PostingController {
     }
 
     @PostMapping("/save")
-    public String savePosting(@RequestBody Posting posting,
-                              @RequestParam MultipartFile image,
-                              @RequestParam MultipartFile video,
-                              @RequestParam MultipartFile file) {
+    public String savePosting(@RequestBody Posting posting) {
         try {
-            postingService.postSave(posting, image, video, file);
+            postingService.postSave(posting);
             return "게시글 저장 완료";
         } catch (Exception e) {
             return "게시글 저장 실패: " + e.getMessage();
+        }
+    }
+
+    @GetMapping("list")
+    public ResponseEntity<?> postingList(@RequestBody BoardTypeRequest request){
+        try{
+            List<Posting> postings = postingService.findListByBoardType(request.getBoardType());
+            return ResponseEntity.ok().body(postings);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("게시글 저장 실패: " + e.getMessage());
         }
     }
 }
