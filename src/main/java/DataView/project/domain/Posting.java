@@ -27,15 +27,6 @@ public class Posting {
     @Column(name = "content")
     private String content;
 
-    @Column(name = "imagePath")
-    private String imagePath;
-
-    @Column(name = "videoPath")
-    private String videoPath;
-
-    @Column(name = "filePath")
-    private String filePath;
-
     @Column(name = "link")
     private String link;
 
