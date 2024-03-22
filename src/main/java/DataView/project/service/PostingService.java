@@ -24,12 +24,17 @@ public class PostingService {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
         posting.setUserId(userDetails.getUsername());
+        posting.setAuthor(userDetails.getName());
         posting.setCreated_at(LocalDateTime.now());
 
         postingRepository.save(posting);
     }
 
-    public List<Posting> findListByBoardType(String boardType){
+    public List<Posting> findListByBoardType(String boardType) {
         return postingRepository.findAllByBoardType(boardType);
+    }
+
+    public void delete(Long postingId) {
+        postingRepository.deleteById(postingId);
     }
 }

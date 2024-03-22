@@ -25,6 +25,10 @@ public record CustomUserDetails(Member member) implements UserDetails {
         return member.getUsername();
     }
 
+    public String getName() {
+        return member.getName();
+    }
+
     @Override
     public boolean isAccountNonExpired() {
         return true;
