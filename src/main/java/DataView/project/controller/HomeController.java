@@ -1,12 +1,15 @@
 package DataView.project.controller;
 
-import DataView.project.config.TokenStore;
 import DataView.project.domain.Member;
-import DataView.project.dto.JwtToken;
+import DataView.project.dto.CustomUserDetails;
+import DataView.project.dto.PasswordRequest;
 import DataView.project.dto.RegistrationRequest;
 import DataView.project.service.EmailService;
 import DataView.project.service.MemberService;
-import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -16,19 +19,10 @@ public class HomeController {
 
     private final EmailService emailService;
     private final MemberService memberService;
-    private final TokenStore tokenStore;
 
-    public HomeController(EmailService emailService,
-                          MemberService memberService,
-                          TokenStore tokenStore) {
+    public HomeController(EmailService emailService, MemberService memberService) {
         this.emailService = emailService;
         this.memberService = memberService;
-        this.tokenStore = tokenStore;
-    }
-
-    @GetMapping("")
-    public String home() {
-        return "home";
     }
 
     @PostMapping("/register")
@@ -48,7 +42,6 @@ public class HomeController {
     }
 
     @PostMapping("/send-email")
-    @ResponseBody
     public String sendEmail(@RequestParam String email) {
         try {
             // 이메일 보내기
@@ -59,7 +52,7 @@ public class HomeController {
         }
     }
 
-    @PostMapping("/check-authCode")
+    @PostMapping("/check/authCode")
     public String checkAuthCode(@RequestParam String email, @RequestParam int number) {
         if (emailService.checkAuthCode(email, number)) {
             return "인증 완료";
@@ -68,42 +61,26 @@ public class HomeController {
         }
     }
 
-    @PostMapping("/user/login")
-    @ResponseBody
-    public Object login(@RequestParam String username, @RequestParam String password) {
-        try {
-            return memberService.signIn(username, password); // 또는 JWT 토큰을 반환하는 것이 좋습니다.
-        } catch (Exception e) {
-            return "로그인 실패: " + e.getMessage();
-        }
-    }
+    @PostMapping("/change/password")
+    public ResponseEntity<?> changePassword(@RequestBody PasswordRequest request) {
 
-    @GetMapping("/logout")
-    public String logout(HttpServletRequest request) {
-        // 사용자의 토큰을 추출합니다. 토큰을 추출하는 방법은 애플리케이션의 인증 방식에 따라 다를 수 있습니다.
-        JwtToken token = extractTokenFromRequest(request);
+        // 현재 사용자 가져오기
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
-        // 토큰이 null이 아니고 유효한 경우에만 토큰을 제거합니다.
-        if (token != null && tokenStore.isValidToken(token)) {
-            tokenStore.removeToken(token);
-            return "로그아웃 되었습니다.";
-        } else {
-            return "유효하지 않은 토큰 또는 이미 로그아웃된 사용자입니다.";
-        }
-    }
-
-    // HttpServletRequest에서 토큰을 추출하는 메서드
-    private JwtToken extractTokenFromRequest(HttpServletRequest request) {
-        // HTTP 요청에서 Authorization 헤더를 가져옵니다.
-        String authHeader = request.getHeader("Authorization");
-
-        // Authorization 헤더가 없거나 형식이 올바르지 않은 경우 null을 반환합니다.
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return null;
+        // 현재 비밀번호 확인
+        if (!userDetails.getPassword().equals(request.getCurrentPassword())) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("현재 비밀번호 인증 실패");
         }
 
-        // Bearer 스키마를 제거하여 토큰만 추출합니다.
-        String tokenValue = authHeader.substring(7);
-        return new JwtToken("Bearer", tokenValue, null); // Refresh Token은 사용되지 않으므로 null로 설정합니다.
+        // 새 비밀번호와 재확인 비밀번호 일치 확인
+        if (!request.getNewPassword().equals(request.getCheckPassword())) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("새로운 비밀번호 2개 불일치");
+        }
+
+        // 새 비밀번호 설정
+        memberService.updatePassword(userDetails.getUsername(), request.getNewPassword());
+
+        return ResponseEntity.ok().body("비밀번호 변경 성공");
     }
 }
