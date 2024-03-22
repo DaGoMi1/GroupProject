@@ -3,13 +3,10 @@ package DataView.project.controller;
 import DataView.project.domain.Comment;
 import DataView.project.domain.Posting;
 import DataView.project.dto.BoardTypeRequest;
-import DataView.project.dto.CustomUserDetails;
 import DataView.project.service.CommentService;
 import DataView.project.service.PostingService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -55,7 +52,7 @@ public class PostingController {
     public ResponseEntity<?> postingDelete(@RequestBody Posting posting) {
         try {
             postingService.delete(posting.getId());
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok().body("게시글 삭제 완료");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("게시글 삭제 실패: " + e.getMessage());
