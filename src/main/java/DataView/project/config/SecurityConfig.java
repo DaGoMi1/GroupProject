@@ -27,17 +27,17 @@ public class SecurityConfig {
                         .loginProcessingUrl("/home/user/login")
                         .successHandler((request, response, authentication) -> { // 로그인 성공 시 핸들러
                             response.setStatus(HttpServletResponse.SC_OK);
-                            response.getWriter().write("{\"message\": \"로그인 성공\"}");
+                            response.getWriter().write("{\"message\": \"success\"}");
                         })
                         .failureHandler((request, response, exception) -> { // 로그인 실패 시 핸들러
                             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                            response.getWriter().write("{\"message\": \"로그인 실패\"}");
+                            response.getWriter().write("{\"message\": \"fail\"}");
                         })
                 );
 
         http
                 .logout((auth) -> auth
-                        .logoutUrl("/logout")
+                        .logoutUrl("/home/user/logout")
                         .logoutSuccessUrl("/home")
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
