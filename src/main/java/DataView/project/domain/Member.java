@@ -2,16 +2,29 @@ package DataView.project.domain;
 
 
 import jakarta.persistence.*;
+import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import java.util.*;
+
+@Builder
+@Setter
+@Getter
 @Entity
-public class Member {
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
+public class Member implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
 
-    private String userNumber;
+    @Column(nullable = false)
+    private String username;
 
+    @Column(nullable = false)
     private String password;
 
     private String name;
@@ -20,47 +33,28 @@ public class Member {
 
     private String role;
 
-    public Long getId() {
-        return Id;
-    }
-    public void setId(Long Id) {
-        this.Id = Id;
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.singleton(new SimpleGrantedAuthority(this.role));
     }
 
-    public String getUserNumber() {
-        return userNumber;
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
     }
 
-    public void setUserNumber(String userNumber) {
-        this.userNumber = userNumber;
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
     }
 
-    public String getPassword() {
-        return password;
-    }
-    public void setPassword(String password) {
-        this.password = password;
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
     }
 
-    public String getName() {
-        return name;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }

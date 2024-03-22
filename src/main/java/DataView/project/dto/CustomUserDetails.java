@@ -5,22 +5,14 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 
-public class CustomUserDetails implements UserDetails {
-
-    private final Member member;
-
-    public CustomUserDetails(Member member) {
-        this.member = member;
-    }
+public record CustomUserDetails(Member member) implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        Collection<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(member.getRole()));
-        return authorities;
+        return Collections.singleton(new SimpleGrantedAuthority(member.getRole()));
     }
 
     @Override
@@ -30,11 +22,11 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return member.getUserNumber();
+        return member.getUsername();
     }
 
-    public Member getMember() {
-        return member;
+    public String getName() {
+        return member.getName();
     }
 
     @Override

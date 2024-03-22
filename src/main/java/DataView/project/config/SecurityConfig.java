@@ -1,5 +1,6 @@
 package DataView.project.config;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,8 +15,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/login", "/login_process",
-                                "/", "/home", "/home/send-email"
+                        .requestMatchers("/home/**"
                         ).permitAll()
                         .requestMatchers("/notice/write", "/notice/setting",
                                 "/notice/voteStart").hasRole("ADMIN")
@@ -23,19 +23,22 @@ public class SecurityConfig {
                 );
 
         http
-                .formLogin((auth) -> auth.loginPage("/home") //우리가 만들어서 쓸 로그인 페이지 경로
-                        .loginProcessingUrl("/user/login") //로그인 요청 받을 주소
-                        .failureUrl("/home?error=true")
-                        .defaultSuccessUrl("/main")
-                        .successHandler((request, response, authentication) ->
-                                response.sendRedirect("/main"))
-                        .permitAll()
+                .formLogin((auth) -> auth.loginPage("/home")
+                        .loginProcessingUrl("/home/user/login")
+                        .successHandler((request, response, authentication) -> { // 로그인 성공 시 핸들러
+                            response.setStatus(HttpServletResponse.SC_OK);
+                            response.getWriter().write("{\"message\": \"로그인 성공\"}");
+                        })
+                        .failureHandler((request, response, exception) -> { // 로그인 실패 시 핸들러
+                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                            response.getWriter().write("{\"message\": \"로그인 실패\"}");
+                        })
                 );
 
         http
                 .logout((auth) -> auth
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/")
+                        .logoutSuccessUrl("/home")
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
                         .permitAll()
