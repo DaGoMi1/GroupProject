@@ -33,6 +33,9 @@ public class Member implements UserDetails {
 
     private String role;
 
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
+    private List<TimeTable> timeTables = new ArrayList<>();
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singleton(new SimpleGrantedAuthority(this.role));
