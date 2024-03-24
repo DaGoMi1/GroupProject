@@ -30,7 +30,7 @@ public class EmailService {
         mailHelper.setSubject(title);
         mailHelper.setText(content);
 
-        dataMap.put(email,new AuthInfo(authCode, Instant.now()));
+        dataMap.put(email, new AuthInfo(authCode, Instant.now()));
 
         javaMailSender.send(message);
     }
@@ -55,5 +55,6 @@ public class EmailService {
         return Instant.now().minusSeconds(EXPIRATION_TIME_SECONDS).isBefore(timestamp);
     }
 
-        private record AuthInfo(int authCode, Instant timestamp){}
+    private record AuthInfo(int authCode, Instant timestamp) {
+    }
 }

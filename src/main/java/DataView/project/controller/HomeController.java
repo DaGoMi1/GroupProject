@@ -26,7 +26,7 @@ public class HomeController {
     }
 
     @PostMapping("/register")
-    public String register(@ModelAttribute RegistrationRequest request) {
+    public ResponseEntity<?> register(@RequestBody RegistrationRequest request) {
         if (request.getPassword().equals(request.getPassword2())) {
             Member member = new Member();
             member.setUsername(request.getUsername());
@@ -35,29 +35,29 @@ public class HomeController {
             member.setEmail(request.getEmail());
 
             memberService.join(member);
-            return "회원가입 성공";
+            return ResponseEntity.ok().body("회원가입 성공");
         } else {
-            return "회원가입 실패 (비밀번호 재확인 필요)";
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("회원가입 실패");
         }
     }
 
     @PostMapping("/send-email")
-    public String sendEmail(@RequestParam String email) {
+    public ResponseEntity<?> sendEmail(@RequestBody String email) {
         try {
             // 이메일 보내기
             emailService.send(email);
-            return "이메일 인증번호 전송 완료";
+            return ResponseEntity.ok().body("이메일 전송 완료");
         } catch (Exception e) {
-            return "이메일 인증번호 전송 실패: " + e.getMessage();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("이메일 전송 실패");
         }
     }
 
     @PostMapping("/check/authCode")
-    public String checkAuthCode(@RequestParam String email, @RequestParam int number) {
+    public ResponseEntity<?> checkAuthCode(@RequestBody String email, @RequestBody int number) {
         if (emailService.checkAuthCode(email, number)) {
-            return "인증 완료";
+            return ResponseEntity.ok().body("인증 성공");
         } else {
-            return "인증 실패";
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("인증 실패");
         }
     }
 
