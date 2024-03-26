@@ -7,6 +7,7 @@ import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
 
+
 @Entity
 @Getter
 @Setter
@@ -20,4 +21,5 @@ public class Schedules {
     private String title;
     private String content;
     private String color;
+
 }
