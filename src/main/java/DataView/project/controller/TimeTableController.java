@@ -10,10 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/time-table")
@@ -42,6 +41,24 @@ public class TimeTableController {
             return ResponseEntity.ok().body("저장 완료");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("저장 실패");
+        }
+    }
+
+    @GetMapping("/member/list")
+    public ResponseEntity<?> getMemberList(@RequestParam int grade, @RequestParam String semester) {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
+            Member member = userDetails.member();
+
+            TimeTable timeTable = timeTableService.loadTimeTable(member, grade, semester);
+            List<Subject> subjectList = timeTableService.getSubjectList(timeTable);
+
+            return ResponseEntity.ok(subjectList);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("불러오기 실패: " + e.getMessage());
         }
     }
 }

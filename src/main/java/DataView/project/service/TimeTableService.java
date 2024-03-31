@@ -7,6 +7,8 @@ import DataView.project.dto.SubjectRequest;
 import DataView.project.repository.SDJpaSubjectRepository;
 import DataView.project.repository.SDJpaTimeTableRepository;
 
+import java.util.List;
+
 public class TimeTableService {
     private final SDJpaTimeTableRepository timeTableRepository;
     private final SDJpaSubjectRepository subjectRepository;
@@ -40,5 +42,9 @@ public class TimeTableService {
         subject.setCredit(request.getCredit());
         subject.setLectureTime(request.getLectureTime());
         return subject;
+    }
+
+    public List<Subject> getSubjectList(TimeTable timeTable){
+        return timeTable.getSubjects();
     }
 }

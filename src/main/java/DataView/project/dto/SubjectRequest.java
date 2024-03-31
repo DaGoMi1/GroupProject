@@ -33,7 +33,7 @@ public class SubjectRequest {
     private String courseCode; // 과목 코드
 
     @Column(nullable = false)
-    private String courseName; // 과목명
+    private String courseName; // 과목 명
 
     @Column(nullable = false)
     private String professor; // 담당 교수
