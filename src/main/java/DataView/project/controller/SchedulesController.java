@@ -17,8 +17,8 @@ public class SchedulesController {
 
 
     @PatchMapping("/add/{id}")
-    public ResponseEntity<?> schedules(@PathVariable Long id,@RequestBody SchedulesRequest request) {
-        schedulesService.addSchedule(id,request);
+    public ResponseEntity<?> schedules(@RequestBody SchedulesRequest request) {
+        schedulesService.addSchedule(request);
         return ResponseEntity.ok().body("일정 추가 완료!");
     }
 

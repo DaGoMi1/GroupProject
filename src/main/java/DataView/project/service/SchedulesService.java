@@ -17,7 +17,7 @@ public class SchedulesService {
         this.scheduleRepository = scheduleRepository;
     }
 
-    public void addSchedule(Long id, SchedulesRequest request) {
+    public void addSchedule(SchedulesRequest request) {
             Schedules schedule = new Schedules();
             schedule.setStartDay(request.getStartDay());
             schedule.setEndDay(request.getEndDay());
