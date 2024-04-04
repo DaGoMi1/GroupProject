@@ -11,4 +11,5 @@ public class SchedulesRequest {
     private String title;
     private String content;
     private String color;
+    private Long userId;
 }

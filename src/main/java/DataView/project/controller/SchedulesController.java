@@ -3,6 +3,7 @@ package DataView.project.controller;
 
 import DataView.project.dto.SchedulesRequest;
 import DataView.project.service.SchedulesService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,23 +17,42 @@ public class SchedulesController {
     }
 
 
-    @PatchMapping("/add/{id}")
+    @PostMapping("/add")
     public ResponseEntity<?> schedules(@RequestBody SchedulesRequest request) {
-        schedulesService.addSchedule(request);
-        return ResponseEntity.ok().body("일정 추가 완료!");
+        try {
+            schedulesService.addSchedule(request);
+            return ResponseEntity.ok().body("일정 추가 완료!");
+        } catch (Exception e) {
+            // 실패한 경우에 대한 처리
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("일정 추가 실패: " + e.getMessage());
+        }}
+
+    @PostMapping("/update")
+    public ResponseEntity<?> updateSchedule(@RequestParam Long userId, @RequestParam Long id, @RequestBody SchedulesRequest request) {
+        try {
+            schedulesService.updateSchedule(userId, id, request);
+            return ResponseEntity.ok().body("수정 완료!");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("수정 실패: " + e.getMessage());
+        }
     }
 
-    @PatchMapping("/update/{id}")
-    public ResponseEntity<?> updateSchedule(@PathVariable Long id, @RequestBody SchedulesRequest request) {
-        // 서비스를 호출하여 스케줄 업데이트 작업을 수행
-        schedulesService.updateSchedule(id,request);
-        return ResponseEntity.ok("수정 성공!");
+
+    @PostMapping("/delete")
+    public ResponseEntity<?> deleteSchedule(@RequestParam Long userId, @RequestParam Long id) {
+        try {
+            schedulesService.deleteSchedule(userId, id);
+            return ResponseEntity.ok().body("삭제 성공!");
+        } catch (IllegalArgumentException e) {
+            // 예외 발생 시 클라이언트에게 메시지 반환
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            // 그 외 예외 처리
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("삭제 실패: " + e.getMessage());
+        }
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteSchedule(@PathVariable Long id) {
-        schedulesService.deleteSchedule(id);
-        return ResponseEntity.ok().body("삭제 성공!");
-    }
 }
 
