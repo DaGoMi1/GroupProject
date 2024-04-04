@@ -3,11 +3,11 @@ package DataView.project.service;
 import DataView.project.domain.Schedules;
 import DataView.project.dto.SchedulesRequest;
 import DataView.project.repository.SDJpaSchedulesRepository;
-import org.springframework.stereotype.Service;
+
 
 import java.util.Optional;
 
-@Service
+
 public class SchedulesService {
 
     private final SDJpaSchedulesRepository scheduleRepository;

@@ -18,6 +18,8 @@ public class SpringConfig {
     private final SDJpaTimeTableRepository timeTableRepository;
     private final SDJpaSubjectRepository subjectRepository;
 
+    private final SDJpaSchedulesRepository schedulesRepository;
+
     @Autowired
     public SpringConfig(SDJpaMemberRepository memberRepository,
                         SDJpaPostingRepository postingRepository,
@@ -25,7 +27,8 @@ public class SpringConfig {
                         BCryptPasswordEncoder bCryptPasswordEncoder,
                         SDJpaCommentRepository commentRepository,
                         SDJpaTimeTableRepository timeTableRepository,
-                        SDJpaSubjectRepository subjectRepository) {
+                        SDJpaSubjectRepository subjectRepository,
+                        SDJpaSchedulesRepository schedulesRepository) {
         this.memberRepository = memberRepository;
         this.postingRepository = postingRepository;
         this.javaMailSender = javaMailSender;
@@ -33,6 +36,7 @@ public class SpringConfig {
         this.commentRepository = commentRepository;
         this.timeTableRepository = timeTableRepository;
         this.subjectRepository = subjectRepository;
+        this.schedulesRepository = schedulesRepository;
     }
 
     @Bean
@@ -59,5 +63,9 @@ public class SpringConfig {
     @Bean
     public TimeTableService timeTableService(){
         return new TimeTableService(timeTableRepository, subjectRepository);
+    }
+    @Bean
+    public SchedulesService schedulesService(){
+        return new SchedulesService(schedulesRepository);
     }
 }
