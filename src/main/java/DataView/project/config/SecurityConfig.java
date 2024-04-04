@@ -18,7 +18,7 @@ public class SecurityConfig {
                         .requestMatchers("/home/**"
                         ).permitAll()
                         .requestMatchers("/notice/write", "/notice/setting",
-                                "/notice/voteStart","/damin/**").hasRole("ADMIN")
+                                "/notice/voteStart","/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
 
                 );
