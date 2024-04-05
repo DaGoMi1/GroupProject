@@ -24,7 +24,7 @@ public class SubjectRequest {
     private String department; // 개설 학과
 
     @Column(nullable = false)
-    private int subjectYear; // 수강 학년
+    private String subjectYear; // 수강 학년
 
     @Column(nullable = false)
     private String curriculumType; // 교과 구분
