@@ -1,5 +1,6 @@
 package DataView.project.controller;
 
+import DataView.project.domain.Course;
 import DataView.project.domain.Member;
 import DataView.project.domain.Subject;
 import DataView.project.domain.TimeTable;
@@ -53,12 +54,25 @@ public class TimeTableController {
             Member member = userDetails.member();
 
             TimeTable timeTable = timeTableService.loadTimeTable(member, grade, semester);
-            List<Subject> subjectList = timeTableService.getSubjectList(timeTable);
+            List<Subject> subjectList = timeTableService.getMemberSubjectList(timeTable);
 
             return ResponseEntity.ok(subjectList);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("불러오기 실패: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/subject/list")
+    public ResponseEntity<?> getSubjectList(@RequestParam int year,
+                                            @RequestParam String semester,
+                                            @RequestParam String curriculumType) {
+        try {
+            Course course = timeTableService.getCourse(year, semester, curriculumType);
+            List<Subject> subjects = timeTableService.getSubjectList(course);
+            return ResponseEntity.ok(subjects);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("불러오기 실패");
         }
     }
 }

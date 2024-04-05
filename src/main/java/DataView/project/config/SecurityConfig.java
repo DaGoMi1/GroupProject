@@ -7,6 +7,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+
+import java.util.Collections;
 
 @Configuration
 public class SecurityConfig {
@@ -20,7 +23,6 @@ public class SecurityConfig {
                         .requestMatchers("/notice/write", "/notice/setting",
                                 "/notice/voteStart","/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
-
                 );
 
         http
@@ -56,6 +58,18 @@ public class SecurityConfig {
 
         http
                 .csrf(AbstractHttpConfigurer::disable);
+
+        http
+                .cors(auth -> auth.configurationSource(request -> {
+                            CorsConfiguration config = new CorsConfiguration();
+                            config.setAllowedOrigins(Collections.singletonList("http:~~"));
+                            config.setAllowedMethods(Collections.singletonList("*"));
+                            config.setAllowCredentials(true);
+                            config.setAllowedHeaders(Collections.singletonList("*"));
+                            config.setMaxAge(3600L);
+                            return config;
+                        })
+                );
 
         http
                 .exceptionHandling(configurer -> configurer

@@ -1,9 +1,11 @@
 package DataView.project.service;
 
+import DataView.project.domain.Course;
 import DataView.project.domain.Member;
 import DataView.project.domain.Subject;
 import DataView.project.domain.TimeTable;
 import DataView.project.dto.SubjectRequest;
+import DataView.project.repository.SDJpaCourseRepository;
 import DataView.project.repository.SDJpaSubjectRepository;
 import DataView.project.repository.SDJpaTimeTableRepository;
 
@@ -12,11 +14,14 @@ import java.util.List;
 public class TimeTableService {
     private final SDJpaTimeTableRepository timeTableRepository;
     private final SDJpaSubjectRepository subjectRepository;
+    private final SDJpaCourseRepository courseRepository;
 
     public TimeTableService(SDJpaTimeTableRepository timeTableRepository,
-                            SDJpaSubjectRepository subjectRepository) {
+                            SDJpaSubjectRepository subjectRepository,
+                            SDJpaCourseRepository courseRepository) {
         this.timeTableRepository = timeTableRepository;
         this.subjectRepository = subjectRepository;
+        this.courseRepository = courseRepository;
     }
 
     public TimeTable loadTimeTable(Member member, int grade, String semester) {
@@ -44,7 +49,15 @@ public class TimeTableService {
         return subject;
     }
 
-    public List<Subject> getSubjectList(TimeTable timeTable){
+    public List<Subject> getMemberSubjectList(TimeTable timeTable) {
         return timeTable.getSubjects();
+    }
+
+    public Course getCourse(int year, String semester, String curriculumType) {
+        return courseRepository.findByYearAndSemesterAndCurriculumType(year, semester, curriculumType);
+    }
+
+    public List<Subject> getSubjectList(Course course){
+        return course.getSubjects();
     }
 }

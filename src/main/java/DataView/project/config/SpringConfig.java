@@ -17,7 +17,7 @@ public class SpringConfig {
     private final SDJpaCommentRepository commentRepository;
     private final SDJpaTimeTableRepository timeTableRepository;
     private final SDJpaSubjectRepository subjectRepository;
-
+    private final SDJpaCourseRepository courseRepository;
     private final SDJpaSchedulesRepository schedulesRepository;
 
     @Autowired
@@ -28,6 +28,7 @@ public class SpringConfig {
                         SDJpaCommentRepository commentRepository,
                         SDJpaTimeTableRepository timeTableRepository,
                         SDJpaSubjectRepository subjectRepository,
+                        SDJpaCourseRepository courseRepository,
                         SDJpaSchedulesRepository schedulesRepository) {
         this.memberRepository = memberRepository;
         this.postingRepository = postingRepository;
@@ -36,6 +37,7 @@ public class SpringConfig {
         this.commentRepository = commentRepository;
         this.timeTableRepository = timeTableRepository;
         this.subjectRepository = subjectRepository;
+        this.courseRepository = courseRepository;
         this.schedulesRepository = schedulesRepository;
     }
 
@@ -62,7 +64,8 @@ public class SpringConfig {
 
     @Bean
     public TimeTableService timeTableService(){
-        return new TimeTableService(timeTableRepository, subjectRepository);
+        return new TimeTableService(timeTableRepository,
+                subjectRepository, courseRepository);
     }
     @Bean
     public SchedulesService schedulesService(){
