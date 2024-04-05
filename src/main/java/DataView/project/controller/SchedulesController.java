@@ -46,10 +46,8 @@ public class SchedulesController {
             schedulesService.deleteSchedule(userId, id);
             return ResponseEntity.ok().body("삭제 성공!");
         } catch (IllegalArgumentException e) {
-            // 예외 발생 시 클라이언트에게 메시지 반환
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
-            // 그 외 예외 처리
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("삭제 실패: " + e.getMessage());
         }
     }
