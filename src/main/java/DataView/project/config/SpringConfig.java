@@ -66,6 +66,6 @@ public class SpringConfig {
     }
     @Bean
     public SchedulesService schedulesService(){
-        return new SchedulesService(schedulesRepository);
+        return new SchedulesService(schedulesRepository,memberRepository);
     }
 }
