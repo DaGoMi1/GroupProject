@@ -19,6 +19,6 @@ public class Schedules {
     private String color;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 }
