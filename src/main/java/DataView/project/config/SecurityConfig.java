@@ -7,6 +7,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+
+import java.util.Collections;
 
 @Configuration
 public class SecurityConfig {
@@ -15,15 +18,15 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/home/**"
+                        .requestMatchers("/home/**","/schedule/**"
                         ).permitAll()
                         .requestMatchers("/notice/write", "/notice/setting",
-                                "/notice/voteStart").hasRole("ADMIN")
+                                "/notice/voteStart","/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 );
 
         http
-                .formLogin((auth) -> auth.loginPage("/home")
+                .formLogin((auth) -> auth.loginPage("/login")
                         .loginProcessingUrl("/home/user/login")
                         .successHandler((request, response, authentication) -> { // 로그인 성공 시 핸들러
                             response.setStatus(HttpServletResponse.SC_OK);
@@ -38,7 +41,7 @@ public class SecurityConfig {
         http
                 .logout((auth) -> auth
                         .logoutUrl("/home/user/logout")
-                        .logoutSuccessUrl("/home")
+                        .logoutSuccessUrl("/login")
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
                         .permitAll()
@@ -55,6 +58,18 @@ public class SecurityConfig {
 
         http
                 .csrf(AbstractHttpConfigurer::disable);
+
+        http
+                .cors(auth -> auth.configurationSource(request -> {
+                            CorsConfiguration config = new CorsConfiguration();
+                            config.setAllowedOrigins(Collections.singletonList("http:~~"));
+                            config.setAllowedMethods(Collections.singletonList("*"));
+                            config.setAllowCredentials(true);
+                            config.setAllowedHeaders(Collections.singletonList("*"));
+                            config.setMaxAge(3600L);
+                            return config;
+                        })
+                );
 
         http
                 .exceptionHandling(configurer -> configurer

@@ -1,12 +1,7 @@
 package DataView.project.config;
 
-import DataView.project.repository.SDJpaCommentRepository;
-import DataView.project.repository.SDJpaMemberRepository;
-import DataView.project.repository.SDJpaPostingRepository;
-import DataView.project.service.CommentService;
-import DataView.project.service.EmailService;
-import DataView.project.service.MemberService;
-import DataView.project.service.PostingService;
+import DataView.project.repository.*;
+import DataView.project.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,23 +15,36 @@ public class SpringConfig {
     private final JavaMailSender javaMailSender;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final SDJpaCommentRepository commentRepository;
+    private final SDJpaTimeTableRepository timeTableRepository;
+    private final SDJpaSubjectRepository subjectRepository;
+    private final SDJpaCourseRepository courseRepository;
+    private final SDJpaSchedulesRepository schedulesRepository;
 
     @Autowired
     public SpringConfig(SDJpaMemberRepository memberRepository,
                         SDJpaPostingRepository postingRepository,
                         JavaMailSender javaMailSender,
                         BCryptPasswordEncoder bCryptPasswordEncoder,
-                        SDJpaCommentRepository commentRepository) {
+                        SDJpaCommentRepository commentRepository,
+                        SDJpaTimeTableRepository timeTableRepository,
+                        SDJpaSubjectRepository subjectRepository,
+                        SDJpaCourseRepository courseRepository,
+                        SDJpaSchedulesRepository schedulesRepository) {
         this.memberRepository = memberRepository;
         this.postingRepository = postingRepository;
         this.javaMailSender = javaMailSender;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.commentRepository = commentRepository;
+        this.timeTableRepository = timeTableRepository;
+        this.subjectRepository = subjectRepository;
+        this.courseRepository = courseRepository;
+        this.schedulesRepository = schedulesRepository;
     }
 
     @Bean
     public MemberService memberService() {
-        return new MemberService(memberRepository, bCryptPasswordEncoder);
+        return new MemberService(memberRepository,
+                timeTableRepository, bCryptPasswordEncoder);
     }
 
     @Bean
@@ -52,5 +60,15 @@ public class SpringConfig {
     @Bean
     public CommentService commentService(){
         return new CommentService(commentRepository);
+    }
+
+    @Bean
+    public TimeTableService timeTableService(){
+        return new TimeTableService(timeTableRepository,
+                subjectRepository, courseRepository);
+    }
+    @Bean
+    public SchedulesService schedulesService(){
+        return new SchedulesService(schedulesRepository,memberRepository);
     }
 }

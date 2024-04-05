@@ -24,16 +24,16 @@ public class PostingController {
     }
 
     @PostMapping("/save")
-    public String savePosting(@RequestBody Posting posting) {
+    public ResponseEntity<?> savePosting(@RequestBody Posting posting) {
         try {
             String boardType = posting.getBoardType();
             if (!("free".equals(boardType) || "notice".equals(boardType))) {
-                return "게시글 저장 실패: 유효하지 않은 게시글 유형입니다.";
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("유효하지 않은 게시글 유형");
             }
             postingService.postSave(posting);
-            return "게시글 저장 완료";
+            return ResponseEntity.ok().body("게시글 저장 완료");
         } catch (Exception e) {
-            return "게시글 저장 실패: " + e.getMessage();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("게시글 저장 실패");
         }
     }
 
