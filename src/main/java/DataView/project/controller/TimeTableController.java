@@ -4,9 +4,12 @@ import DataView.project.domain.Course;
 import DataView.project.domain.Member;
 import DataView.project.domain.Subject;
 import DataView.project.domain.TimeTable;
+import DataView.project.dto.CourseDTO;
 import DataView.project.dto.CustomUserDetails;
+import DataView.project.dto.SubjectDTO;
 import DataView.project.dto.SubjectRequest;
 import DataView.project.service.TimeTableService;
+import org.hibernate.Hibernate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -50,12 +53,9 @@ public class TimeTableController {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-
             Member member = userDetails.member();
 
-            TimeTable timeTable = timeTableService.loadTimeTable(member, grade, semester);
-            List<Subject> subjectList = timeTableService.getMemberSubjectList(timeTable);
-
+            List<SubjectDTO> subjectList = timeTableService.getMemberSubjectList(member, grade, semester);
             return ResponseEntity.ok(subjectList);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -68,8 +68,8 @@ public class TimeTableController {
                                             @RequestParam String semester,
                                             @RequestParam String curriculumType) {
         try {
-            Course course = timeTableService.getCourse(year, semester, curriculumType);
-            List<Subject> subjects = timeTableService.getSubjectList(course);
+            CourseDTO course = timeTableService.getCourse(year, semester, curriculumType);
+            List<SubjectDTO> subjects = timeTableService.getSubjectList(course);
             return ResponseEntity.ok(subjects);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("불러오기 실패");

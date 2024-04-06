@@ -45,7 +45,6 @@ public class MemberService implements UserDetailsService {
         for (int grade = 1; grade <= 6; grade++) {
             for (int semester = 1; semester <= 4; semester++) {
                 TimeTable timeTable = getTimeTable(member, grade, semester);
-
                 timeTableRepository.save(timeTable);
             }
         }
@@ -59,12 +58,16 @@ public class MemberService implements UserDetailsService {
         switch (semester) {
             case 1:
                 timeTable.setSemester("first");
+                break;
             case 2:
                 timeTable.setSemester("summer");
+                break;
             case 3:
                 timeTable.setSemester("second");
+                break;
             case 4:
                 timeTable.setSemester("winter");
+                break;
         }
         return timeTable;
     }
