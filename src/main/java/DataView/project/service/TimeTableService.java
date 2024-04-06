@@ -11,9 +11,7 @@ import DataView.project.repository.SDJpaCourseRepository;
 import DataView.project.repository.SDJpaSubjectRepository;
 import DataView.project.repository.SDJpaTimeTableRepository;
 import jakarta.transaction.Transactional;
-import org.hibernate.Hibernate;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 

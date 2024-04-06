@@ -1,6 +1,5 @@
 package DataView.project.controller;
 
-import DataView.project.domain.Course;
 import DataView.project.domain.Member;
 import DataView.project.domain.Subject;
 import DataView.project.domain.TimeTable;
@@ -9,7 +8,6 @@ import DataView.project.dto.CustomUserDetails;
 import DataView.project.dto.SubjectDTO;
 import DataView.project.dto.SubjectRequest;
 import DataView.project.service.TimeTableService;
-import org.hibernate.Hibernate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
