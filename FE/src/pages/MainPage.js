@@ -3,11 +3,11 @@ import Navbar from '../components/Navbar'
 import Carousel from '../components/Carousel'
 import MainBoard from '../components/MainBoard'
 
-const MainPage = () => {
+const MainPage = ({setIsLogin}) => {
 
   return (
     <>
-      <Navbar/>
+      <Navbar setIsLogin={setIsLogin}/>
       <Carousel/>
       <MainBoard/>
     </>

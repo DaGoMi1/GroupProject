@@ -313,6 +313,12 @@ td{
   margin-left: 0;
 }
 
+.active a, .active button{
+  cursor: pointer;
+  font-size: 16px;
+  color: white;
+}
+
 .userInfo {
   display: flex;
   justify-content: center;

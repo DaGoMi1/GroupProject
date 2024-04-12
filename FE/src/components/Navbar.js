@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import Sideabar from './Sideabar'
 
-const Navbar = () => {
+const Navbar = ({setIsLogin}) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   return (
     <>
@@ -31,7 +31,7 @@ const Navbar = () => {
       </nav>
       
       {sidebarOpen 
-        ? <Sideabar sidebarOpen = {sidebarOpen} setSidebarOpen = {setSidebarOpen}/> 
+        ? <Sideabar sidebarOpen = {sidebarOpen} setSidebarOpen = {setSidebarOpen} setIsLogin={setIsLogin}/> 
         : null
           }
     </>
