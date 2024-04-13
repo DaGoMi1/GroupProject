@@ -5,8 +5,11 @@ import DataView.project.domain.LiberalArtsCredit;
 import DataView.project.domain.Subject;
 import DataView.project.dto.*;
 import DataView.project.repository.SDJpaDataCreditRepository;
+import DataView.project.repository.SDJpaGeneralEducationCurriculumRepository;
 import DataView.project.repository.SDJpaLiberalArtsCreditRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -17,11 +20,14 @@ import java.util.Set;
 public class CreditService {
     private final SDJpaDataCreditRepository dataCreditRepository;
     private final SDJpaLiberalArtsCreditRepository liberalArtsCreditRepository;
+    private final SDJpaGeneralEducationCurriculumRepository generalEducationCurriculumRepository;
 
     public CreditService(SDJpaDataCreditRepository dataCreditRepository,
-                         SDJpaLiberalArtsCreditRepository liberalArtsCreditRepository) {
+                         SDJpaLiberalArtsCreditRepository liberalArtsCreditRepository,
+                         SDJpaGeneralEducationCurriculumRepository generalEducationCurriculumRepository) {
         this.dataCreditRepository = dataCreditRepository;
         this.liberalArtsCreditRepository = liberalArtsCreditRepository;
+        this.generalEducationCurriculumRepository = generalEducationCurriculumRepository;
     }
 
     public DataCredit getDataCredit() {
@@ -50,6 +56,11 @@ public class CreditService {
     public LiberalArtsCreditDTO getMemberLiberalArtsCredit(List<Subject> memberSubjectList) {
         LiberalArtsCreditDTO liberalArtsCreditDTO = new LiberalArtsCreditDTO(0, 0, 0, 0, 0, 0, 0, 0);
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        String username = userDetails.getUsername();
+        int year = Integer.parseInt(username.substring(0, 4));
+
         int rest = 0;
         Set<String> uniqueCourseCodes = new HashSet<>();
         List<Subject> subjectList = new ArrayList<>(memberSubjectList);
@@ -64,9 +75,13 @@ public class CreditService {
             int memberCredit = liberalArtsCreditDTO.getCreditBySubArea(subject.getSubArea());
             int universityCredit = liberalArtsCreditRepository.findFieldValueByIdAndFieldName(1L, subject.getSubArea());
 
+
+            boolean checkCourse = generalEducationCurriculumRepository.
+                    findByYearAndCourseCode(year, subject.getCourseCode()) == null;
+
             if (uniqueCourseCodes.contains(subject.getCourseCode())) {
                 continue;
-            } else if (memberCredit == -1) {
+            } else if (memberCredit == -1 || checkCourse) {
                 rest += credit;
             } else if (memberCredit + credit <= universityCredit) {
                 switch (subject.getSubArea()) {

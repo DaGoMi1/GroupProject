@@ -21,6 +21,7 @@ public class SpringConfig {
     private final SDJpaSchedulesRepository schedulesRepository;
     private final SDJpaDataCreditRepository dataCreditRepository;
     private final SDJpaLiberalArtsCreditRepository liberalArtsCreditRepository;
+    private final SDJpaGeneralEducationCurriculumRepository generalEducationCurriculumRepository;
 
     @Autowired
     public SpringConfig(SDJpaMemberRepository memberRepository,
@@ -33,7 +34,8 @@ public class SpringConfig {
                         SDJpaCourseRepository courseRepository,
                         SDJpaSchedulesRepository schedulesRepository,
                         SDJpaDataCreditRepository dataCreditRepository,
-                        SDJpaLiberalArtsCreditRepository liberalArtsCreditRepository) {
+                        SDJpaLiberalArtsCreditRepository liberalArtsCreditRepository,
+                        SDJpaGeneralEducationCurriculumRepository generalEducationCurriculumRepository) {
         this.memberRepository = memberRepository;
         this.postingRepository = postingRepository;
         this.javaMailSender = javaMailSender;
@@ -45,6 +47,7 @@ public class SpringConfig {
         this.schedulesRepository = schedulesRepository;
         this.dataCreditRepository = dataCreditRepository;
         this.liberalArtsCreditRepository = liberalArtsCreditRepository;
+        this.generalEducationCurriculumRepository = generalEducationCurriculumRepository;
     }
 
     @Bean
@@ -79,5 +82,6 @@ public class SpringConfig {
     }
 
     @Bean
-    public CreditService creditService(){return new CreditService(dataCreditRepository, liberalArtsCreditRepository);}
+    public CreditService creditService(){return new CreditService(dataCreditRepository,
+            liberalArtsCreditRepository, generalEducationCurriculumRepository);}
 }
