@@ -19,6 +19,8 @@ public class SpringConfig {
     private final SDJpaSubjectRepository subjectRepository;
     private final SDJpaCourseRepository courseRepository;
     private final SDJpaSchedulesRepository schedulesRepository;
+    private final SDJpaDataCreditRepository dataCreditRepository;
+    private final SDJpaLiberalArtsCreditRepository liberalArtsCreditRepository;
 
     @Autowired
     public SpringConfig(SDJpaMemberRepository memberRepository,
@@ -29,7 +31,9 @@ public class SpringConfig {
                         SDJpaTimeTableRepository timeTableRepository,
                         SDJpaSubjectRepository subjectRepository,
                         SDJpaCourseRepository courseRepository,
-                        SDJpaSchedulesRepository schedulesRepository) {
+                        SDJpaSchedulesRepository schedulesRepository,
+                        SDJpaDataCreditRepository dataCreditRepository,
+                        SDJpaLiberalArtsCreditRepository liberalArtsCreditRepository) {
         this.memberRepository = memberRepository;
         this.postingRepository = postingRepository;
         this.javaMailSender = javaMailSender;
@@ -39,6 +43,8 @@ public class SpringConfig {
         this.subjectRepository = subjectRepository;
         this.courseRepository = courseRepository;
         this.schedulesRepository = schedulesRepository;
+        this.dataCreditRepository = dataCreditRepository;
+        this.liberalArtsCreditRepository = liberalArtsCreditRepository;
     }
 
     @Bean
@@ -65,10 +71,13 @@ public class SpringConfig {
     @Bean
     public TimeTableService timeTableService(){
         return new TimeTableService(timeTableRepository,
-                subjectRepository, courseRepository);
+                subjectRepository, courseRepository, memberRepository);
     }
     @Bean
     public SchedulesService schedulesService(){
         return new SchedulesService(schedulesRepository,memberRepository);
     }
+
+    @Bean
+    public CreditService creditService(){return new CreditService(dataCreditRepository, liberalArtsCreditRepository);}
 }

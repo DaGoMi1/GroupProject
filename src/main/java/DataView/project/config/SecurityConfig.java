@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
@@ -20,8 +21,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/home/**","/schedule/**"
                         ).permitAll()
-                        .requestMatchers("/notice/write", "/notice/setting",
-                                "/notice/voteStart","/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 );
 
@@ -49,9 +49,14 @@ public class SecurityConfig {
 
         http
                 .sessionManagement((auth) -> auth
-                        .maximumSessions(1)
-                        .maxSessionsPreventsLogin(true));
-
+                        // 세션 최대 허용 시간 설정 (기본값: 30분)
+                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                        .invalidSessionUrl("/login?expired=true") // 만료된 세션 리다이렉션 URL 설정
+                        .sessionFixation().migrateSession() // 세션 고정 방지를 위한 설정
+                        .maximumSessions(1) // 동시 세션 허용 개수 설정
+                        .maxSessionsPreventsLogin(false) // 동시 로그인 차단 여부 설정
+                        .expiredUrl("/login?expired=true") // 만료된 세션 리다이렉션 URL 설정
+                );
         http
                 .sessionManagement((auth) -> auth
                         .sessionFixation().changeSessionId());

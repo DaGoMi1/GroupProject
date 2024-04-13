@@ -25,7 +25,7 @@ public class HomeController {
         this.memberService = memberService;
     }
 
-    @PostMapping("/register")
+    @PostMapping("/user")
     public ResponseEntity<?> register(@RequestBody RegistrationRequest request) {
         if (request.getPassword().equals(request.getPassword2())) {
             Member member = new Member();
