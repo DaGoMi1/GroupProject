@@ -4,13 +4,14 @@ import DataView.project.domain.Course;
 import DataView.project.domain.Member;
 import DataView.project.domain.Subject;
 import DataView.project.domain.TimeTable;
-import DataView.project.dto.CourseDTO;
-import DataView.project.dto.SubjectDTO;
-import DataView.project.dto.SubjectRequest;
+import DataView.project.dto.*;
 import DataView.project.repository.SDJpaCourseRepository;
+import DataView.project.repository.SDJpaMemberRepository;
 import DataView.project.repository.SDJpaSubjectRepository;
 import DataView.project.repository.SDJpaTimeTableRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,13 +21,16 @@ public class TimeTableService {
     private final SDJpaTimeTableRepository timeTableRepository;
     private final SDJpaSubjectRepository subjectRepository;
     private final SDJpaCourseRepository courseRepository;
+    private final SDJpaMemberRepository memberRepository;
 
     public TimeTableService(SDJpaTimeTableRepository timeTableRepository,
                             SDJpaSubjectRepository subjectRepository,
-                            SDJpaCourseRepository courseRepository) {
+                            SDJpaCourseRepository courseRepository,
+                            SDJpaMemberRepository memberRepository) {
         this.timeTableRepository = timeTableRepository;
         this.subjectRepository = subjectRepository;
         this.courseRepository = courseRepository;
+        this.memberRepository = memberRepository;
     }
 
     public TimeTable loadTimeTable(Member member, int grade, String semester) {
@@ -91,5 +95,29 @@ public class TimeTableService {
 
     public List<SubjectDTO> getSubjectList(CourseDTO course) {
         return course.getSubjects();
+    }
+
+
+    public List<Subject> getAllSubject() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        Member member = userDetails.member();
+        member = memberRepository.findByIdWithTimeTables(member.getId());
+
+        List<TimeTable> timeTables = member.getTimeTables();
+        timeTables.replaceAll(timeTable -> {
+            TimeTable updatedTimeTable = timeTableRepository.findByIdWithSubjects(timeTable.getId());
+            return updatedTimeTable != null ? updatedTimeTable : new TimeTable();
+        });
+
+        List<Subject> subjectList = new ArrayList<>();
+        timeTables.forEach(timeTable -> {
+            List<Subject> subjects = timeTable.getSubjects();
+            if (subjects != null) {
+                subjectList.addAll(subjects);
+            }
+        });
+
+        return subjectList;
     }
 }
