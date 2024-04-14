@@ -2,14 +2,13 @@ package DataView.project.service;
 
 import DataView.project.domain.DataCredit;
 import DataView.project.domain.LiberalArtsCredit;
+import DataView.project.domain.Member;
 import DataView.project.domain.Subject;
 import DataView.project.dto.*;
 import DataView.project.repository.SDJpaDataCreditRepository;
 import DataView.project.repository.SDJpaGeneralEducationCurriculumRepository;
 import DataView.project.repository.SDJpaLiberalArtsCreditRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -53,12 +52,17 @@ public class CreditService {
         return creditDTO;
     }
 
-    public LiberalArtsCreditDTO getMemberLiberalArtsCredit(List<Subject> memberSubjectList) {
+    public GradeDTO getGrade(DataCreditDTO dataCredit, LiberalArtsCreditDTO liberalArtsCredit) {
+        GradeDTO gradeDTO = new GradeDTO();
+        gradeDTO.setDataCreditDTO(dataCredit);
+        gradeDTO.setLiberalArtsCreditDTO(liberalArtsCredit);
+        return gradeDTO;
+    }
+
+    public LiberalArtsCreditDTO getMemberLiberalArtsCredit(Member member, List<Subject> memberSubjectList) {
         LiberalArtsCreditDTO liberalArtsCreditDTO = new LiberalArtsCreditDTO(0, 0, 0, 0, 0, 0, 0, 0);
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        String username = userDetails.getUsername();
+        String username = member.getUsername();
         int year = Integer.parseInt(username.substring(0, 4));
 
         int rest = 0;

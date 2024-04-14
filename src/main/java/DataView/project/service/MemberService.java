@@ -3,9 +3,12 @@ package DataView.project.service;
 import DataView.project.domain.Member;
 import DataView.project.domain.TimeTable;
 import DataView.project.dto.CustomUserDetails;
+import DataView.project.dto.RegistrationRequest;
 import DataView.project.repository.SDJpaMemberRepository;
 import DataView.project.repository.SDJpaTimeTableRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -23,6 +26,12 @@ public class MemberService implements UserDetailsService {
         this.memberRepository = memberRepository;
         this.timeTableRepository = timeTableRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    }
+
+    public Member getMember() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        return userDetails.member();
     }
 
     public void join(Member member) {
@@ -95,4 +104,26 @@ public class MemberService implements UserDetailsService {
         memberRepository.save(member);
     }
 
+    public boolean checkPassword(String password) {
+        Member member = getMember();
+        return bCryptPasswordEncoder.matches(password, member.getPassword());
+    }
+
+    public boolean matchPassword(String password, String password2) {
+        return password.equals(password2);
+    }
+
+    @Transactional
+    public void deleteMember() {
+        memberRepository.delete(getMember());
+    }
+
+    public Member mapByMemberRequest(RegistrationRequest request) {
+        Member member = new Member();
+        member.setUsername(request.getUsername());
+        member.setPassword(request.getPassword());
+        member.setName(request.getName());
+        member.setEmail(request.getEmail());
+        return member;
+    }
 }
