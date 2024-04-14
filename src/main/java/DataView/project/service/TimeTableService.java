@@ -48,15 +48,11 @@ public class TimeTableService {
         return optionalSubject.orElse(null);
     }
 
-    public boolean deleteMemberSubject(Member member, Long id) {
-        Subject subject = getSubjectById(id);
-
-        if (subject.getTimeTable().getMember() == member) {
-            subjectRepository.deleteById(id);
-            return true;
-        } else {
-            return false;
-        }
+    public boolean checkMemberSubject(Member member, Long subjectId) {
+        return getSubjectById(subjectId).getTimeTable().getMember() == member;
+    }
+    public void deleteMemberSubject(Long subjectId) {
+        subjectRepository.deleteById(subjectId);
     }
 
     public List<SubjectDTO> getMemberSubjectList(Member member, int grade, String semester) {

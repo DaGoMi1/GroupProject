@@ -53,9 +53,9 @@ public class TimeTableController {
         try {
             Member member = memberService.getMember(); // 현재 사용자 가져오기
 
-
             // Subject 객체가 현재 사용자 Member의 것이라면
-            if (timeTableService.deleteMemberSubject(member, request.getSubjectId())) {
+            if (timeTableService.checkMemberSubject(member, request.getSubjectId())) {
+                timeTableService.deleteMemberSubject(request.getSubjectId());
                 return ResponseEntity.ok("삭제완료");
             } else {
                 // Member의 것이 아니라면

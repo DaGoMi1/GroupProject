@@ -62,7 +62,8 @@ public class PostingController {
         try {
             Member member = memberService.getMember(); // 현재 사용자 가져오기
 
-            if (postingService.deletePosting(member, posting.getId())) { // 게시글을 쓴 사람이 사용자와 같다면
+            if (postingService.checkMemberPosting(member, posting.getId())) { // 게시글을 쓴 사람이 사용자와 같다면
+                postingService.deletePosting(posting.getId()); // 게시글 삭제
                 return ResponseEntity.ok().body("게시글 삭제 완료");
             } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("본인의 게시글이 아닙니다"); // 다르다면
@@ -88,7 +89,8 @@ public class PostingController {
         try {
             Member member = memberService.getMember(); // 현재 사용자 가져오기
 
-            if (commentService.deleteComment(member, comment.getId())) { // 댓글을 쓴 사람이 사용자가 맞다면
+            if (commentService.checkMemberComment(member, comment.getId())) { // 댓글을 쓴 사람이 사용자가 맞다면
+                commentService.deleteComment(comment.getId()); // 댓글 삭제
                 return ResponseEntity.ok().body("댓글 삭제 완료");
             } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("본인의 댓글이 아닙니다"); // 아니라면

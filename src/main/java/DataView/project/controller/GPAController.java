@@ -50,7 +50,7 @@ public class GPAController {
         try {
             Member member = memberService.getMember(); // Member 불러오기
 
-            List<Subject> memberSubject = timeTableService.getAllSubject(member); // Member 수강하 과목 들고오기
+            List<Subject> memberSubject = timeTableService.getAllSubject(member); // Member 수강하는 과목 들고오기
 
             // 교양선택 소영역 기준으로 학점계산하기
             LiberalArtsCreditDTO liberalArtsCredit = creditService.getMemberLiberalArtsCredit(member, memberSubject);

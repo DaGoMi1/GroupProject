@@ -113,7 +113,6 @@ public class MemberService implements UserDetailsService {
         return password.equals(password2);
     }
 
-    @Transactional
     public void deleteMember() {
         memberRepository.delete(getMember());
     }
