@@ -26,12 +26,11 @@ public class CommentService {
         return comment.orElse(null);
     }
 
-    public boolean deleteComment(Member member, Long commentId) {
-        if (getCommentById(commentId).getPosting().getUserId().equals(member.getUsername())) {
-            commentRepository.deleteById(commentId);
-            return true;
-        } else {
-            return false;
-        }
+    public boolean checkMemberComment(Member member, Long commentId) {
+        return getCommentById(commentId).getPosting().getUserId().equals(member.getUsername());
+    }
+
+    public void deleteComment(Long commentId) {
+        commentRepository.deleteById(commentId);
     }
 }

@@ -35,12 +35,11 @@ public class PostingService {
         return posting.orElse(null);
     }
 
-    public boolean deletePosting(Member member, Long postingId) {
-        if (getPostingById(postingId).getUserId().equals(member.getUsername())) {
-            postingRepository.deleteById(postingId);
-            return true;
-        } else {
-            return false;
-        }
+    public boolean checkMemberPosting(Member member, Long postingId) {
+        return getPostingById(postingId).getUserId().equals(member.getUsername());
+    }
+
+    public void deletePosting(Long postingId) {
+        postingRepository.deleteById(postingId);
     }
 }
