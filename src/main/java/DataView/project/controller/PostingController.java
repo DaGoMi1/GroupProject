@@ -1,9 +1,11 @@
 package DataView.project.controller;
 
 import DataView.project.domain.Comment;
+import DataView.project.domain.Member;
 import DataView.project.domain.Posting;
 import DataView.project.dto.BoardTypeRequest;
 import DataView.project.service.CommentService;
+import DataView.project.service.MemberService;
 import DataView.project.service.PostingService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,21 +18,28 @@ import java.util.List;
 public class PostingController {
     private final PostingService postingService;
     private final CommentService commentService;
+    private final MemberService memberService;
 
     public PostingController(PostingService postingService,
-                             CommentService commentService) {
+                             CommentService commentService,
+                             MemberService memberService) {
         this.postingService = postingService;
         this.commentService = commentService;
+        this.memberService = memberService;
     }
 
     @PostMapping("/save")
     public ResponseEntity<?> savePosting(@RequestBody Posting posting) {
         try {
-            String boardType = posting.getBoardType();
-            if (!("free".equals(boardType) || "notice".equals(boardType))) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("유효하지 않은 게시글 유형");
+            String boardType = posting.getBoardType(); // BoardType 변수에 저장
+
+            if (!("free".equals(boardType) || "notice".equals(boardType))) { // BoardType이 free나 notice가 아니라면
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유효하지 않은 게시글 유형");
             }
-            postingService.postSave(posting);
+
+            Member member = memberService.getMember(); // 현재 사용자 가져오기
+            postingService.postSave(member, posting); // 게시글 저장
+
             return ResponseEntity.ok().body("게시글 저장 완료");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("게시글 저장 실패");
@@ -40,46 +49,52 @@ public class PostingController {
     @PostMapping("/list")
     public ResponseEntity<?> postingList(@RequestBody BoardTypeRequest request) {
         try {
+            // BoardType에 맞는 게시글 리스트 가져오기
             List<Posting> postings = postingService.findListByBoardType(request.getBoardType());
             return ResponseEntity.ok().body(postings);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("게시글 저장 실패: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("게시글 저장 실패: " + e.getMessage());
         }
     }
 
     @PostMapping("/delete")
     public ResponseEntity<?> postingDelete(@RequestBody Posting posting) {
         try {
-            postingService.delete(posting.getId());
-            return ResponseEntity.ok().body("게시글 삭제 완료");
+            Member member = memberService.getMember(); // 현재 사용자 가져오기
+
+            if (postingService.deletePosting(member, posting.getId())) { // 게시글을 쓴 사람이 사용자와 같다면
+                return ResponseEntity.ok().body("게시글 삭제 완료");
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("본인의 게시글이 아닙니다"); // 다르다면
+            }
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("게시글 삭제 실패: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("게시글 삭제 실패: " + e.getMessage());
         }
     }
 
     @PostMapping("/comment/save")
     public ResponseEntity<?> saveComment(@RequestBody Comment comment) {
         try {
-            commentService.commentSave(comment);
+            Member member = memberService.getMember(); // 현재 사용자 가져오기
+            commentService.commentSave(member, comment); // 댓글 저장
             return ResponseEntity.ok().body("댓글 저장 완료");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("댓글 저장 실패: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("댓글 저장 실패: " + e.getMessage());
         }
     }
 
     @PostMapping("/comment/delete")
     public ResponseEntity<?> commentDelete(@RequestBody Comment comment) {
         try {
-            commentService.delete(comment.getId());
-            return ResponseEntity.ok().body("댓글 삭제 완료");
+            Member member = memberService.getMember(); // 현재 사용자 가져오기
+
+            if (commentService.deleteComment(member, comment.getId())) { // 댓글을 쓴 사람이 사용자가 맞다면
+                return ResponseEntity.ok().body("댓글 삭제 완료");
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("본인의 댓글이 아닙니다"); // 아니라면
+            }
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("댓글 삭제 실패: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("댓글 삭제 실패: " + e.getMessage());
         }
     }
-
-
 }

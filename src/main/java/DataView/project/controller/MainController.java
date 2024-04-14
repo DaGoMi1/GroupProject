@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/main")
 public class MainController {
     @GetMapping("/test")
-    public ResponseEntity<?> testing(){
+    public ResponseEntity<?> testing() {
         return ResponseEntity.ok().body("세션 유지 중");
     }
 }

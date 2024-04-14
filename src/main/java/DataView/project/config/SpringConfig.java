@@ -57,31 +57,34 @@ public class SpringConfig {
     }
 
     @Bean
-    public EmailService emailService(){
+    public EmailService emailService() {
         return new EmailService(javaMailSender);
     }
 
     @Bean
-    public PostingService postingService(){
+    public PostingService postingService() {
         return new PostingService(postingRepository);
     }
 
     @Bean
-    public CommentService commentService(){
+    public CommentService commentService() {
         return new CommentService(commentRepository);
     }
 
     @Bean
-    public TimeTableService timeTableService(){
+    public TimeTableService timeTableService() {
         return new TimeTableService(timeTableRepository,
                 subjectRepository, courseRepository, memberRepository);
     }
+
     @Bean
-    public SchedulesService schedulesService(){
-        return new SchedulesService(schedulesRepository,memberRepository);
+    public SchedulesService schedulesService() {
+        return new SchedulesService(schedulesRepository, memberRepository);
     }
 
     @Bean
-    public CreditService creditService(){return new CreditService(dataCreditRepository,
-            liberalArtsCreditRepository, generalEducationCurriculumRepository);}
+    public CreditService creditService() {
+        return new CreditService(dataCreditRepository,
+                liberalArtsCreditRepository, generalEducationCurriculumRepository);
+    }
 }

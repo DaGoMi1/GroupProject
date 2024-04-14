@@ -10,11 +10,10 @@ import DataView.project.repository.SDJpaMemberRepository;
 import DataView.project.repository.SDJpaSubjectRepository;
 import DataView.project.repository.SDJpaTimeTableRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Transactional
 public class TimeTableService {
@@ -39,23 +38,25 @@ public class TimeTableService {
 
     public void addSubject(TimeTable timeTable, Subject subject) {
         subject.setTimeTable(timeTable);
+        subject.setCourse(null);
+        subject.setId(null);
         subjectRepository.save(subject);
     }
 
-    public Subject mapSubjectRequestToSubject(SubjectRequest request) {
-        Subject subject = new Subject();
-        subject.setArea(request.getArea());
-        subject.setSubArea(request.getSubArea());
-        subject.setCollege(request.getCollege());
-        subject.setDepartment(request.getDepartment());
-        subject.setSubjectYear(request.getSubjectYear());
-        subject.setCurriculumType(request.getCurriculumType());
-        subject.setCourseCode(request.getCourseCode());
-        subject.setCourseName(request.getCourseName());
-        subject.setProfessor(request.getProfessor());
-        subject.setCredit(request.getCredit());
-        subject.setLectureTime(request.getLectureTime());
-        return subject;
+    public Subject getSubjectById(Long id) {
+        Optional<Subject> optionalSubject = subjectRepository.findById(id);
+        return optionalSubject.orElse(null);
+    }
+
+    public boolean deleteMemberSubject(Member member, Long id) {
+        Subject subject = getSubjectById(id);
+
+        if (subject.getTimeTable().getMember() == member) {
+            subjectRepository.deleteById(id);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public List<SubjectDTO> getMemberSubjectList(Member member, int grade, String semester) {
@@ -98,10 +99,7 @@ public class TimeTableService {
     }
 
 
-    public List<Subject> getAllSubject() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        Member member = userDetails.member();
+    public List<Subject> getAllSubject(Member member) {
         member = memberRepository.findByIdWithTimeTables(member.getId());
 
         List<TimeTable> timeTables = member.getTimeTables();

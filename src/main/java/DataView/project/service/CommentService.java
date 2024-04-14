@@ -1,12 +1,11 @@
 package DataView.project.service;
 
 import DataView.project.domain.Comment;
-import DataView.project.dto.CustomUserDetails;
+import DataView.project.domain.Member;
 import DataView.project.repository.SDJpaCommentRepository;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 public class CommentService {
     private final SDJpaCommentRepository commentRepository;
@@ -15,17 +14,24 @@ public class CommentService {
         this.commentRepository = commentRepository;
     }
 
-    public void commentSave(Comment comment) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-
-        comment.setUserId(userDetails.getUsername());
+    public void commentSave(Member member, Comment comment) {
+        comment.setUserId(member.getUsername());
         comment.setCreatedDate(LocalDateTime.now());
 
         commentRepository.save(comment);
     }
 
-    public void delete(Long commentId) {
-        commentRepository.deleteById(commentId);
+    public Comment getCommentById(Long id) {
+        Optional<Comment> comment = commentRepository.findById(id);
+        return comment.orElse(null);
+    }
+
+    public boolean deleteComment(Member member, Long commentId) {
+        if (getCommentById(commentId).getPosting().getUserId().equals(member.getUsername())) {
+            commentRepository.deleteById(commentId);
+            return true;
+        } else {
+            return false;
+        }
     }
 }

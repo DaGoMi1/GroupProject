@@ -19,15 +19,14 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/home/**","/schedule/**"
+                        .requestMatchers("/home/user", "/home/user/login", "/home/send-email", "/home/check/authCode"
                         ).permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 );
 
         http
-                .formLogin((auth) -> auth.loginPage("/login")
-                        .loginProcessingUrl("/home/user/login")
+                .formLogin((auth) -> auth.loginProcessingUrl("/home/user/login")
                         .successHandler((request, response, authentication) -> { // 로그인 성공 시 핸들러
                             response.setStatus(HttpServletResponse.SC_OK);
                             response.getWriter().write("{\"message\": \"success\"}");
@@ -41,7 +40,6 @@ public class SecurityConfig {
         http
                 .logout((auth) -> auth
                         .logoutUrl("/home/user/logout")
-                        .logoutSuccessUrl("/login")
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
                         .permitAll()
