@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @Entity
@@ -19,6 +22,9 @@ public class Subject {
     @ManyToOne
     @JoinColumn(name = "course_id")
     private Course course;
+
+    @OneToOne(mappedBy = "subject", cascade = CascadeType.REMOVE)
+    private Credit credits;
 
     @Column(name = "area")
     private String area; // 영역

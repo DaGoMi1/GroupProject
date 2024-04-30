@@ -21,16 +21,15 @@ public class SchedulesService {
         this.scheduleRepository = scheduleRepository;
         this.memberRepository = memberRepository;
     }
-
     public void addSchedule(SchedulesRequest request) {
         //값이 하나라도 없는 경우 error 발생
         if (request.getStartDay() == null || request.getEndDay() == null ||
                 request.getTitle() == null || request.getContent() == null ||
-                request.getColor() == null) {
+                request.getColor() == null ) {
             throw new IllegalArgumentException("실패: 요청 데이터가 부족합니다.");
         }
 
-        // 데이터를 받는 부분
+// 데이터를 받는 부분
         Schedules schedule = new Schedules();
         schedule.setStartDay(request.getStartDay());
         schedule.setEndDay(request.getEndDay());
@@ -41,7 +40,7 @@ public class SchedulesService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String loggedInUsername = authentication.getName();
 
-        // 사용자 이름을 기반으로 회원 조회
+// 사용자 이름을 기반으로 회원 조회
         Optional<Member> optionalMember = memberRepository.findByUsername(loggedInUsername);
 
         if (optionalMember.isPresent()) {
@@ -53,6 +52,7 @@ public class SchedulesService {
             // 회원을 찾지 못한 경우 예외 처리
             throw new IllegalArgumentException("회원이 존재하지 않습니다. Username: " + loggedInUsername);
         }
+
     }
 
     public void updateSchedule(Long userId, Long id, SchedulesRequest request) {
@@ -90,6 +90,7 @@ public class SchedulesService {
             throw new IllegalArgumentException("해당 사용자를 찾을 수 없습니다.");
         }
     }
+
 
 
     public void deleteSchedule(Long userId, Long id) {

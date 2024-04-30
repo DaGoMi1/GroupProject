@@ -13,6 +13,7 @@ import jakarta.transaction.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Transactional
@@ -49,8 +50,9 @@ public class TimeTableService {
     }
 
     public boolean checkMemberSubject(Member member, Long subjectId) {
-        return getSubjectById(subjectId).getTimeTable().getMember() == member;
+        return getSubjectById(subjectId).getTimeTable().getMember().getId().equals(member.getId());
     }
+
     public void deleteMemberSubject(Long subjectId) {
         subjectRepository.deleteById(subjectId);
     }
@@ -99,16 +101,16 @@ public class TimeTableService {
         member = memberRepository.findByIdWithTimeTables(member.getId());
 
         List<TimeTable> timeTables = member.getTimeTables();
-        timeTables.replaceAll(timeTable -> {
-            TimeTable updatedTimeTable = timeTableRepository.findByIdWithSubjects(timeTable.getId());
-            return updatedTimeTable != null ? updatedTimeTable : new TimeTable();
-        });
+        timeTables.removeIf(Objects::isNull);
+        timeTables.replaceAll(timeTable -> timeTableRepository.findByIdWithSubjects(timeTable.getId()));
 
         List<Subject> subjectList = new ArrayList<>();
         timeTables.forEach(timeTable -> {
-            List<Subject> subjects = timeTable.getSubjects();
-            if (subjects != null) {
-                subjectList.addAll(subjects);
+            if (timeTable != null) {
+                List<Subject> subjects = timeTable.getSubjects();
+                if (subjects != null) {
+                    subjectList.addAll(subjects);
+                }
             }
         });
 

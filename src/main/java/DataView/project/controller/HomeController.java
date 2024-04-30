@@ -57,7 +57,7 @@ public class HomeController {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("인증 실패"); // 인증코드가 불일치한다면
             }
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버측 오류 " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("인증할 수 없습니다: " + e.getMessage());
         }
     }
 

@@ -44,11 +44,15 @@ public class EmailService {
 
     public boolean checkAuthCode(String email, int number) {
         AuthInfo authInfo = dataMap.get(email);
-        if (authInfo != null && authInfo.authCode() == number && isValid(authInfo.timestamp())) {
+
+        if (email == null || number == 0) {
+            throw new NullPointerException("요청한 변수가 부족합니다.");
+        } else if (authInfo != null && authInfo.authCode() == number && isValid(authInfo.timestamp())) {
             dataMap.remove(email); // 인증번호 확인 후 삭제
             return true;
+        } else {
+            return false;
         }
-        return false;
     }
 
     private boolean isValid(Instant timestamp) {
