@@ -90,4 +90,9 @@ public class SpringConfig {
         return new CreditService(dataCreditRepository,
                 liberalArtsCreditRepository, generalEducationCurriculumRepository, creditRepository);
     }
+
+    @Bean
+    public AdminService adminService() {
+        return new AdminService(postingRepository, schedulesRepository);
+    }
 }
