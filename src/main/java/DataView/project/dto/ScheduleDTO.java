@@ -5,11 +5,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class SchedulesRequest {
+public class ScheduleDTO {
     private String startDay;
     private String endDay;
     private String title;
     private String content;
     private String color;
-    private Long scheduleId;
 }

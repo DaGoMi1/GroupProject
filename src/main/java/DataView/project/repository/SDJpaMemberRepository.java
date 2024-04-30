@@ -13,4 +13,9 @@ public interface SDJpaMemberRepository extends JpaRepository<Member, Long> {
             "JOIN FETCH m.timeTables tt " +
             "WHERE m.Id = :memberId")
     Member findByIdWithTimeTables(Long memberId);
+
+    @Query("SELECT DISTINCT m FROM Member m " +
+            "JOIN FETCH m.schedules tt " +
+            "WHERE m.Id = :memberId")
+    Member findByIdWithSchedules(Long memberId);
 }
