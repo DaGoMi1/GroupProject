@@ -20,6 +20,9 @@ public class Subject {
     @JoinColumn(name = "course_id")
     private Course course;
 
+    @OneToOne(mappedBy = "subject", cascade = CascadeType.REMOVE)
+    private Credit credits;
+
     @Column(name = "area")
     private String area; // 영역
 

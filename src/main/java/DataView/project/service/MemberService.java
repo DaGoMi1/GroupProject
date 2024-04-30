@@ -31,7 +31,11 @@ public class MemberService implements UserDetailsService {
     public Member getMember() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        return userDetails.member();
+        if(userDetails.member()!=null){
+            return userDetails.member();
+        }else{
+            throw new UsernameNotFoundException("회원을 찾을 수가 없습니다.");
+        }
     }
 
     public void join(Member member) {

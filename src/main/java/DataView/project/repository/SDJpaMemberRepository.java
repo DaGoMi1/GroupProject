@@ -8,6 +8,7 @@ import java.util.Optional;
 
 public interface SDJpaMemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByUsername(String userId);
+
     @Query("SELECT DISTINCT m FROM Member m " +
             "JOIN FETCH m.timeTables tt " +
             "WHERE m.Id = :memberId")

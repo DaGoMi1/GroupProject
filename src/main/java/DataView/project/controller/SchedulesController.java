@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/schedule")
 public class SchedulesController {
-    private final SchedulesService schedulesService;
+    private  final SchedulesService schedulesService;
 
     public SchedulesController(SchedulesService schedulesService) {
         this.schedulesService = schedulesService;
@@ -23,9 +23,9 @@ public class SchedulesController {
             schedulesService.addSchedule(request);
             return ResponseEntity.ok().body("일정 추가 완료!");
         } catch (Exception e) {
+            // 실패한 경우에 대한 처리
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("일정 추가 실패: " + e.getMessage());
-        }
-    }
+        }}
 
     @PostMapping("/update")
     public ResponseEntity<?> updateSchedule(@RequestParam Long userId, @RequestParam Long id, @RequestBody SchedulesRequest request) {

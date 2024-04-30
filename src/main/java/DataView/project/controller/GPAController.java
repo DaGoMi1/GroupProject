@@ -1,18 +1,14 @@
 package DataView.project.controller;
 
-import DataView.project.domain.DataCredit;
-import DataView.project.domain.LiberalArtsCredit;
-import DataView.project.domain.Member;
-import DataView.project.domain.Subject;
+import DataView.project.domain.*;
 import DataView.project.dto.*;
 import DataView.project.service.CreditService;
 import DataView.project.service.MemberService;
 import DataView.project.service.TimeTableService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -40,8 +36,8 @@ public class GPAController {
 
             CreditDTO creditDTO = creditService.getCredit(dataCredit, liberalArtsCredit); // 총 필요 학점 붙여서 반환
             return ResponseEntity.ok(creditDTO);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("불러오기 실패" + e.getMessage());
+        } catch (UsernameNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("불러오기 실패: " + e.getMessage());
         }
     }
 
@@ -60,8 +56,37 @@ public class GPAController {
 
             GradeDTO gradeDTO = creditService.getGrade(dataCredit, liberalArtsCredit); // 두개 합쳐서 반환
             return ResponseEntity.ok(gradeDTO);
+        } catch (UsernameNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/credit/save")
+    public ResponseEntity<?> saveCredit(@RequestBody MemberCreditDTO memberCredit) {
+        try {
+            Member member = memberService.getMember(); // Member 가져오기
+
+            if (timeTableService.checkMemberSubject(member, memberCredit.getSubjectId())) { // Member가 수강한 과목이라면
+                Subject subject = timeTableService.getSubjectById(memberCredit.getSubjectId()); // Subject 가져오기
+                creditService.saveCredit(memberCredit.getGrade(), subject); // 학점 저장
+                return ResponseEntity.ok().body("학점 저장 완료");
+            } else { // Member가 수강한 과목이 아니라면
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("본인이 수강한 과목이 아닙니다");
+            }
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("불러오기 실패" + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("학점 저장 실패" + e.getMessage());
+        }
+    }
+
+    @GetMapping("/credit/member")
+    public ResponseEntity<?> memberCreditList() {
+        try {
+            Member member = memberService.getMember(); // Member 가져오기
+            List<Subject> subjects = timeTableService.getAllSubject(member); // Member의 모든 수강 과목 가져오기
+            double averageGrade = creditService.getAllCredit(subjects); // 학점 등급 계산
+            return ResponseEntity.ok(averageGrade);
+        } catch (UsernameNotFoundException | NullPointerException | IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 }
