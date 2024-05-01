@@ -1,23 +1,46 @@
 package DataView.project.controller;
 
 import DataView.project.domain.Comment;
+import DataView.project.domain.Member;
 import DataView.project.domain.Posting;
 import DataView.project.domain.Schedules;
 import DataView.project.service.AdminService;
+import DataView.project.service.MemberService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
     private final AdminService adminService;
+    private final MemberService memberService;
 
-    public AdminController(AdminService adminService) {
+    public AdminController(AdminService adminService, MemberService memberService) {
         this.adminService = adminService;
+        this.memberService = memberService;
+    }
+
+    @GetMapping("/grant")
+    public ResponseEntity<?> grantAdminRole() {
+        try {
+            Member member = memberService.getMember();
+            adminService.grantAdminRole(member);
+            return ResponseEntity.ok("관리자 권한 부여 완료");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("관리자 권한 부여 실패: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/revoke")
+    public ResponseEntity<?> revokeAdminRole() {
+        try {
+            Member member = memberService.getMember();
+            adminService.revokeAdminRole(member);
+            return ResponseEntity.ok("관리자 권한 해제 완료");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("관리자 권한 해제 실패: " + e.getMessage());
+        }
     }
 
     @PostMapping("/posting/delete")
