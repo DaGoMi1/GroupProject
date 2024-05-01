@@ -31,9 +31,9 @@ public class MemberService implements UserDetailsService {
     public Member getMember() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        if(userDetails.member()!=null){
+        if (userDetails.member() != null) {
             return userDetails.member();
-        }else{
+        } else {
             throw new UsernameNotFoundException("회원을 찾을 수가 없습니다.");
         }
     }
@@ -41,17 +41,7 @@ public class MemberService implements UserDetailsService {
     public void join(Member member) {
         validateDuplicateMember(member); //중복 회원 검증
         member.setPassword(bCryptPasswordEncoder.encode(member.getPassword()));
-
-        String role;
-
-        // 특정 사용자에게 추가 권한 부여
-        if (member.getUsername().equals("DSYJ")) {
-            role = "ROLE_ADMIN";
-        } else {
-            role = "ROLE_USER";
-        }
-
-        member.setRole(role);
+        member.setRole("ROLE_USER");
 
         memberRepository.save(member);
 

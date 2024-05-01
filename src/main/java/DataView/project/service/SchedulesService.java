@@ -80,6 +80,7 @@ public class SchedulesService {
 
         for (Schedules schedule : member.getSchedules()) {
             ScheduleDTO scheduleDTO = new ScheduleDTO();
+            scheduleDTO.setId(schedule.getId());
             scheduleDTO.setStartDay(schedule.getStartDay());
             scheduleDTO.setEndDay(schedule.getEndDay());
             scheduleDTO.setTitle(schedule.getTitle());
@@ -91,6 +92,20 @@ public class SchedulesService {
 
         return scheduleDTOs;
     }
+
+    public List<Schedules> getDataList() {
+        List<Schedules> schedules = new ArrayList<>();
+        List<Schedules> allSchedules = scheduleRepository.findAll();
+
+        for (Schedules schedule : allSchedules) {
+            if (schedule.getMember() == null) {
+                schedules.add(schedule);
+            }
+        }
+
+        return schedules;
+    }
+
 }
 
 

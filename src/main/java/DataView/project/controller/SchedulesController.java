@@ -2,6 +2,7 @@ package DataView.project.controller;
 
 
 import DataView.project.domain.Member;
+import DataView.project.domain.Schedules;
 import DataView.project.dto.ScheduleDTO;
 import DataView.project.dto.SchedulesRequest;
 import DataView.project.service.MemberService;
@@ -62,6 +63,16 @@ public class SchedulesController {
         try {
             Member member = memberService.getMember();
             List<ScheduleDTO> schedulesList = schedulesService.getMemberList(member);
+            return ResponseEntity.ok(schedulesList);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/list/data")
+    public ResponseEntity<?> listData() {
+        try {
+            List<Schedules> schedulesList = schedulesService.getDataList();
             return ResponseEntity.ok(schedulesList);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

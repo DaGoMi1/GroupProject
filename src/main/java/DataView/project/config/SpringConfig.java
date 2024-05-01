@@ -93,6 +93,6 @@ public class SpringConfig {
 
     @Bean
     public AdminService adminService() {
-        return new AdminService(postingRepository, schedulesRepository);
+        return new AdminService(postingRepository, schedulesRepository, memberRepository);
     }
 }

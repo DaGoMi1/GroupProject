@@ -1,16 +1,32 @@
 package DataView.project.service;
 
+import DataView.project.domain.Member;
 import DataView.project.domain.Schedules;
+import DataView.project.repository.SDJpaMemberRepository;
 import DataView.project.repository.SDJpaPostingRepository;
 import DataView.project.repository.SDJpaSchedulesRepository;
 
 public class AdminService {
     private final SDJpaPostingRepository postingRepository;
     private final SDJpaSchedulesRepository schedulesRepository;
+    private final SDJpaMemberRepository memberRepository;
 
-    public AdminService(SDJpaPostingRepository postingRepository, SDJpaSchedulesRepository schedulesRepository) {
+    public AdminService(SDJpaPostingRepository postingRepository,
+                        SDJpaSchedulesRepository schedulesRepository,
+                        SDJpaMemberRepository memberRepository) {
         this.postingRepository = postingRepository;
         this.schedulesRepository = schedulesRepository;
+        this.memberRepository = memberRepository;
+    }
+
+    public void grantAdminRole(Member member) {
+        member.setRole("ROLE_ADMIN");
+        memberRepository.save(member);
+    }
+
+    public void revokeAdminRole(Member member) {
+        member.setRole("ROLE_USER");
+        memberRepository.save(member);
     }
 
     public void deletePosting(Long postingId) throws Exception {

@@ -7,7 +7,6 @@ import DataView.project.service.MemberService;
 import DataView.project.service.TimeTableService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,7 +35,7 @@ public class GPAController {
 
             CreditDTO creditDTO = creditService.getCredit(dataCredit, liberalArtsCredit); // 총 필요 학점 붙여서 반환
             return ResponseEntity.ok(creditDTO);
-        } catch (UsernameNotFoundException e) {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("불러오기 실패: " + e.getMessage());
         }
     }
@@ -56,7 +55,7 @@ public class GPAController {
 
             GradeDTO gradeDTO = creditService.getGrade(dataCredit, liberalArtsCredit); // 두개 합쳐서 반환
             return ResponseEntity.ok(gradeDTO);
-        } catch (UsernameNotFoundException e) {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
@@ -85,7 +84,7 @@ public class GPAController {
             List<Subject> subjects = timeTableService.getAllSubject(member); // Member의 모든 수강 과목 가져오기
             double averageGrade = creditService.getAllCredit(subjects); // 학점 등급 계산
             return ResponseEntity.ok(averageGrade);
-        } catch (UsernameNotFoundException | NullPointerException | IllegalArgumentException e) {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
