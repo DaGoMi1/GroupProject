@@ -12,7 +12,6 @@ a{
 button{
   border: none;
   background: none;
-
 }
 
 ul{
@@ -37,10 +36,12 @@ nav ul{
 .nav_menu > li{
   padding: 1rem 3rem;
 }
+
 .nav_menu button{
   color: #263392;
   cursor: pointer;
 }
+
 .kmou_logo{
   max-width: 150px;
 }
@@ -51,6 +52,7 @@ nav ul{
   width: 40px;
   height: 40px;
 }
+
 .hamburger:hover{
   border: 1px solid;
   border-radius: 50%;
@@ -58,11 +60,7 @@ nav ul{
 }
 
 /* Carousel */
-.carousel{
-  margin-top: 1rem;
-  background-color: #263392;
-  color: black;
-}
+
 
 /* MainBoard */
 .wrap{
@@ -116,6 +114,18 @@ nav ul{
   margin-bottom: 1rem;
 }
 
+.calendar_right_area{
+  display: grid;
+}
+
+.calendar_btn_area{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+}
+
+/* 회의 */
 .meet_area{
   display: grid;
   grid-template-columns: 8fr 4fr;
@@ -140,7 +150,7 @@ nav ul{
   row-gap: 1rem;
 }
 
-.make_meetingroom,.join_meetingroom{
+.make_meetingroom,.join_meetingroom,.calendar_btn_area button{
   background-color: #263392;
   padding: 8px 12px;
   color: white;
@@ -198,11 +208,10 @@ footer{
   font-size: 18px;
 }
 
-
-
 table{
   border-collapse: collapse;
   width: 100%;
+  height: 735px;
   text-align: center;
 }
 
@@ -251,6 +260,7 @@ td{
   right: 0;
   top: 0;
 }
+
 .sidebarButton {
   width: 100px;
   height: 30px;
@@ -258,43 +268,13 @@ td{
   border: none;
   border-radius: 10px;
 }
+
 .closeBtn{
   color: white;
   padding-left: 0.5rem;
   cursor: pointer;
 }
 
-.sidebarXButtonWrap {
-  background-color: #263392;
-  width: 300px;
-  height: 30px;
-  transition: 0.3s;
-  margin: 0;
-}
-.sidebarXButton {
-  width: 100px;
-  height: 30px;
-  background-color: beige;
-  border: none;
-  transition: 0.3s;
-  border-radius: 10px;
-}
-.xButtonHide {
-  background-color: #263392;
-  color: white;
-  margin-left: -300px;
-  width: 300px;
-  height: 30px;
-  transition: 0.3s;
-}
-.xButtonActive {
-  background-color: #263392;
-  color: white;
-  transition: 0.3s;
-  width: 300px;
-  height: 30px;
-  margin-left: 0;
-}
 .hide {
   background-color: #263392;
   color: white;
@@ -324,15 +304,18 @@ td{
   justify-content: center;
   padding: 10px;
 }
+
 .photo {
   width: 70px;
   height: 70px;
   margin: 5px;
 }
+
 .nameStudentNumMajor {
   margin: 5px;
   height: 70px;
 }
+
 .nameStudentNum {
   display: flex;
   margin: 5px;
@@ -377,3 +360,76 @@ hr {
   display: flex;
   justify-content: center;
 }
+
+/* LoginPage */
+
+.page {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+
+.titleWrap {
+  margin: 10px;
+  font-size: 20px;
+}
+
+input {
+  padding: 8px;
+  margin: 5px;
+  border-radius: 10px;
+  width: 200px;
+  font-size: 13px;
+}
+
+.errorMessageWrap {
+  color: red;
+  margin: 5px;
+  font-size: 18px;
+}
+
+.loginButton {
+  background-color: #263392;
+  color: white;
+  cursor: pointer;
+  width: 215px;
+  padding: 5px;
+  margin: 5px;
+  border-radius: 10px;
+  border: none;
+}
+
+.login_area{
+  display: flex;
+  flex-direction: column;
+}
+
+.searchPasswordWrap {
+  padding: 10px;
+}
+
+.searchPasswordLink {
+  text-decoration: none;
+  color: black;
+  font-size: 15px;
+  margin: 0 5px;
+}
+
+.scrollToTopButton{
+  font-size: 48px;
+  cursor: pointer;
+  position: fixed;
+  bottom: 1rem;
+  right: 3rem;
+  visibility: hidden;
+  color: #cfcfcf;
+}
+
+.scrollToTopButton.visible{
+  visibility: visible;
+}
+

@@ -13,14 +13,7 @@ const RenderDate = ({ current }) => {
   let date = weekStart;
   let formattedDate = '';
 
-  const onClickDate = (key) => {
-    fetchDate(key);
-  }
-
-  const fetchDate = async (key) => {
-    const response = await api.get('/main/test');
-    console.log(response);
-  }
+  
 
   while(date <= weekEnd){
     const weekList = [];
@@ -40,7 +33,7 @@ const RenderDate = ({ current }) => {
           ? 'date'
           : 'otherMonthDate'
       weekList.push(
-        <td onClick = {()=>{onClickDate(key)}} className = {classNames} key = {key}>
+        <td className = {classNames} key = {key}>
             {formattedDate}
         </td>); 
       date = addDays(date,1);

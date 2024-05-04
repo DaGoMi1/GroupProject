@@ -1,9 +1,9 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-const BoardBoard = () => {
+const BoardBoard = React.forwardRef((props,ref) => {
   return (
     <div className='contents'>
-      <div className="box category" id='boardboard'>게시판</div>
+      <div className="box category" ref={ref}>게시판</div>
       <div className="box">
         <ul>
           <li>글 1</li>
@@ -17,6 +17,6 @@ const BoardBoard = () => {
       </div>
     </div>
   )
-}
+})
 
 export default BoardBoard

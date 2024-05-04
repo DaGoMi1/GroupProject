@@ -1,8 +1,8 @@
 import React from 'react'
-const Links = () => {
+const Links = React.forwardRef((props,ref) => {
   return (
     <div className="contents">
-      <div className="box category" id='links'>링크</div>
+      <div className="box category" ref={ref}>링크</div>
       <div className="box links_area">
         <div>
           <a href="https://tis.kmou.ac.kr/nxui/index.html" target='_blank'>
@@ -31,6 +31,6 @@ const Links = () => {
       </div>
     </div>
   )
-}
+})
 
 export default Links
