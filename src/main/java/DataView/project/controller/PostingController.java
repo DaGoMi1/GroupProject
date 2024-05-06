@@ -5,12 +5,15 @@ import DataView.project.domain.Member;
 import DataView.project.domain.Posting;
 import DataView.project.dto.BoardTypeRequest;
 import DataView.project.service.CommentService;
+import DataView.project.service.FileService;
 import DataView.project.service.MemberService;
 import DataView.project.service.PostingService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -19,13 +22,15 @@ public class PostingController {
     private final PostingService postingService;
     private final CommentService commentService;
     private final MemberService memberService;
+    private final FileService fileService;
 
     public PostingController(PostingService postingService,
                              CommentService commentService,
-                             MemberService memberService) {
+                             MemberService memberService, FileService fileService) {
         this.postingService = postingService;
         this.commentService = commentService;
         this.memberService = memberService;
+        this.fileService = fileService;
     }
 
     @PostMapping("/save")
@@ -43,6 +48,17 @@ public class PostingController {
             return ResponseEntity.ok().body("게시글 저장 완료");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("게시글 저장 실패");
+        }
+    }
+
+    @PostMapping("/update")
+    public ResponseEntity<?> updatePosting(@RequestBody Posting posting) {
+        try {
+            Member member = memberService.getMember();
+            postingService.updatePosting(posting, member);
+            return ResponseEntity.ok().body("수정 완료!");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("수정 실패: " + e.getMessage());
         }
     }
 
@@ -84,6 +100,20 @@ public class PostingController {
         }
     }
 
+    @PostMapping("/comment/update")
+    public ResponseEntity<?> updateComment(@RequestBody Comment comment) {
+        try {
+            Member member = memberService.getMember();
+
+            // 댓글 수정 메서드 호출
+            commentService.commentUpdate(comment);
+
+            return ResponseEntity.ok().body("댓글이 성공적으로 수정되었습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("댓글 수정 실패: " + e.getMessage());
+        }
+    }
+
     @PostMapping("/comment/delete")
     public ResponseEntity<?> commentDelete(@RequestBody Comment comment) {
         try {
@@ -99,4 +129,21 @@ public class PostingController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("댓글 삭제 실패: " + e.getMessage());
         }
     }
-}
+
+
+    @PostMapping("/file/update")
+    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("postId") Long postId) {
+        try {
+            // 현재 로그인한 사용자 정보 가져오기
+            Member member = memberService.getMember();
+
+            // 이미지 파일 저장 및 DB에 정보 저장
+            fileService.saveFile(file, postId, member);
+
+            return ResponseEntity.ok("이미지 업로드 및 저장 완료");
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("이미지 업로드 실패: " + e.getMessage());
+        }
+
+}}
+
