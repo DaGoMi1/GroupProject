@@ -1,7 +1,6 @@
 package DataView.project.service;
 
 import DataView.project.domain.File;
-import DataView.project.domain.Member;
 import DataView.project.repository.SDJpaFileRepository;
 import org.springframework.web.multipart.MultipartFile;
 
