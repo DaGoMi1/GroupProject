@@ -103,16 +103,21 @@ public class PostingController {
     @PostMapping("/comment/update")
     public ResponseEntity<?> updateComment(@RequestBody Comment comment) {
         try {
-            Member member = memberService.getMember();
+            Member member = memberService.getMember(); // 현재 사용자 가져오기
 
-            // 댓글 수정 메서드 호출
-            commentService.commentUpdate(comment);
-
-            return ResponseEntity.ok().body("댓글이 성공적으로 수정되었습니다.");
+            // 현재 사용자가 댓글 작성자인지 확인
+            if (commentService.checkMemberComment(member, comment.getId())) {
+                // 댓글 수정 메서드 호출
+                commentService.commentUpdate(comment);
+                return ResponseEntity.ok().body("댓글이 성공적으로 수정되었습니다.");
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("본인의 댓글만 수정할 수 있습니다.");
+            }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("댓글 수정 실패: " + e.getMessage());
         }
     }
+
 
     @PostMapping("/comment/delete")
     public ResponseEntity<?> commentDelete(@RequestBody Comment comment) {
@@ -134,11 +139,8 @@ public class PostingController {
     @PostMapping("/file/update")
     public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("postId") Long postId) {
         try {
-            // 현재 로그인한 사용자 정보 가져오기
-            Member member = memberService.getMember();
-
             // 이미지 파일 저장 및 DB에 정보 저장
-            fileService.saveFile(file, postId, member);
+            fileService.saveFile(file, postId);
 
             return ResponseEntity.ok("이미지 업로드 및 저장 완료");
         } catch (IOException e) {

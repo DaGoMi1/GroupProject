@@ -21,7 +21,7 @@ public class FileService {
     }
 
 
-    public void saveFile(MultipartFile file, Long postId, Member member) throws IOException {
+    public void saveFile(MultipartFile file, Long postId) throws IOException {
         // 파일 저장 경로 설정
         String uploadDir = "uploads/";
         Path uploadPath = Paths.get(uploadDir);

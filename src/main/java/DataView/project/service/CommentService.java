@@ -13,7 +13,6 @@ public class CommentService {
 
     public CommentService(SDJpaCommentRepository commentRepository) {
         this.commentRepository = commentRepository;
-
     }
 
 
