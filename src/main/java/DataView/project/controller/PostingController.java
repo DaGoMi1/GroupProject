@@ -136,7 +136,7 @@ public class PostingController {
     }
 
 
-    @PostMapping("/file/Imageupdate")
+    @PostMapping("/file/update")
     public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("postId") Long postId) {
         try {
             // 이미지 파일 저장 및 DB에 정보 저장
@@ -148,7 +148,7 @@ public class PostingController {
         }
 
     }
-    @DeleteMapping("/file/Imagedelete/{fileId}")
+    @DeleteMapping("/file/delete/{fileId}")
     public ResponseEntity<?> deleteFile(@PathVariable Long fileId) {
         try {
             fileService.deleteFile(fileId);
