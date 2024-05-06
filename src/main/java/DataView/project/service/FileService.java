@@ -45,6 +45,19 @@ public class FileService {
         fileRepository.save(fileEntity);
     }
 
+    public void deleteFile(Long fileId) throws IOException {
+        // 파일 정보 가져오기
+        File file = fileRepository.findById(fileId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 파일을 찾을 수 없습니다"));
+
+        // 파일 삭제
+        Path filePath = Paths.get(file.getSaveName());
+        Files.deleteIfExists(filePath);
+
+        // 데이터베이스에서 파일 정보 삭제
+        fileRepository.deleteById(fileId);
+    }
+
 
 }
 

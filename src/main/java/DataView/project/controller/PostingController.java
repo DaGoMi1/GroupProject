@@ -136,7 +136,7 @@ public class PostingController {
     }
 
 
-    @PostMapping("/file/update")
+    @PostMapping("/file/Imageupdate")
     public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("postId") Long postId) {
         try {
             // 이미지 파일 저장 및 DB에 정보 저장
@@ -147,5 +147,16 @@ public class PostingController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("이미지 업로드 실패: " + e.getMessage());
         }
 
-}}
+    }
+    @DeleteMapping("/file/Imagedelete/{fileId}")
+    public ResponseEntity<?> deleteFile(@PathVariable Long fileId) {
+        try {
+            fileService.deleteFile(fileId);
+            return ResponseEntity.ok().body("파일 삭제 완료");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("파일 삭제 실패: " + e.getMessage());
+        }
+    }
+}
 
