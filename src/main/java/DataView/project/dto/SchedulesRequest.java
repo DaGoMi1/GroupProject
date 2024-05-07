@@ -9,7 +9,6 @@ public class SchedulesRequest {
     private String startDay;
     private String endDay;
     private String title;
-    private String content;
     private String color;
     private Long scheduleId;
 }
