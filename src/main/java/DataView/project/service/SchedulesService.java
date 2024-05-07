@@ -27,7 +27,6 @@ public class SchedulesService {
         schedule.setStartDay(request.getStartDay());
         schedule.setEndDay(request.getEndDay());
         schedule.setTitle(request.getTitle());
-        schedule.setContent(request.getContent());
         schedule.setColor(request.getColor());
         schedule.setMember(member);
 
@@ -52,9 +51,6 @@ public class SchedulesService {
             }
             if (request.getTitle() != null) {
                 schedule.setTitle(request.getTitle());
-            }
-            if (request.getContent() != null) {
-                schedule.setContent(request.getContent());
             }
             if (request.getColor() != null) {
                 schedule.setColor(request.getColor());
@@ -84,7 +80,6 @@ public class SchedulesService {
             scheduleDTO.setStartDay(schedule.getStartDay());
             scheduleDTO.setEndDay(schedule.getEndDay());
             scheduleDTO.setTitle(schedule.getTitle());
-            scheduleDTO.setContent(schedule.getContent());
             scheduleDTO.setColor(schedule.getColor());
 
             scheduleDTOs.add(scheduleDTO);

@@ -10,6 +10,5 @@ public class ScheduleDTO {
     private String startDay;
     private String endDay;
     private String title;
-    private String content;
     private String color;
 }
