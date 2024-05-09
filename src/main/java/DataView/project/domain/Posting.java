@@ -39,4 +39,8 @@ public class Posting {
     @OneToMany(mappedBy = "posting", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @OrderBy("id asc")
     private List<Comment> comments;
+
+    @OneToMany(mappedBy = "posting", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OrderBy("id asc")
+    private List<File> files;
 }
