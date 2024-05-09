@@ -1,8 +1,7 @@
-import React from 'react'
-import api from '../../utils/api';
-
+import React, { useEffect, useState } from 'react'
+import api from '../../../utils/api';
 import { format ,startOfMonth, endOfMonth, startOfWeek, endOfWeek, addDays, getDay } from 'date-fns'
-const RenderDate = ({ current }) => {
+const RenderDate = ({ current, schoolSchedule}) => {
   const currentMonth = format(current,'M');
   const monthStart = startOfMonth(current);
   const monthEnd = endOfMonth(current);
@@ -13,8 +12,7 @@ const RenderDate = ({ current }) => {
   let date = weekStart;
   let formattedDate = '';
 
-  
-
+  // schoolSchedule 이 바뀔 때마다 캘린더에 렌더링
   while(date <= weekEnd){
     const weekList = [];
     for(let i=0; i<7; i++){
@@ -35,13 +33,12 @@ const RenderDate = ({ current }) => {
       weekList.push(
         <td className = {classNames} key = {key}>
             {formattedDate}
+
         </td>); 
       date = addDays(date,1);
     }
     dateList.push(weekList);
     console.log(dateList);  
-
-
   }
   return (
     <>
