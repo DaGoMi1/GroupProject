@@ -5,7 +5,8 @@ import RenderDate from './RenderDate'
 import { useState } from 'react'
 import { addMonths, subMonths } from 'date-fns'
 
-const Calendar = () => {
+
+const Calendar = ({schoolSchedule}) => {
   const [current, setCurrent] = useState(new Date());
 
   const goPrevMonth = () => {
@@ -21,7 +22,7 @@ const Calendar = () => {
           <RenderHeader current={current} goNextMonth={goNextMonth} goPrevMonth={goPrevMonth}/>
         <table>
           <RenderDays />
-          <RenderDate current={current}/>
+          <RenderDate current={current} schoolSchedule={schoolSchedule}/>
         </table>
       </div>
     </>

@@ -15,10 +15,9 @@ public class Schedules {
     private String startDay;
     private String endDay;
     private String title;
-    private String content;
     private String color;
 
     @ManyToOne
-    @JoinColumn(name = "member_id", nullable = false)
+    @JoinColumn(name = "member_id")
     private Member member;
 }

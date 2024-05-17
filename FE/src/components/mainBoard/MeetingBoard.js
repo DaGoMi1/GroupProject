@@ -1,9 +1,9 @@
 import React from 'react'
 
-const MeetingBoard = () => {
+const MeetingBoard = React.forwardRef((props,ref) => {
   return (
     <div className='contents'>
-      <div className="box category" id='meetingBoard'>회의</div>
+      <div className="box category" ref={ref}>회의</div>
       <div className="box meet_area">
         <div>
           <h3 className='meet_top_mention'>조별 과제, 회의</h3>
@@ -21,6 +21,6 @@ const MeetingBoard = () => {
       </div>
     </div>
   )
-}
+})
 
 export default MeetingBoard

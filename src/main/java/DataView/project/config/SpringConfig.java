@@ -19,6 +19,11 @@ public class SpringConfig {
     private final SDJpaSubjectRepository subjectRepository;
     private final SDJpaCourseRepository courseRepository;
     private final SDJpaSchedulesRepository schedulesRepository;
+    private final SDJpaDataCreditRepository dataCreditRepository;
+    private final SDJpaLiberalArtsCreditRepository liberalArtsCreditRepository;
+    private final SDJpaGeneralEducationCurriculumRepository generalEducationCurriculumRepository;
+    private final SDJpaCreditRepository creditRepository;
+    private final SDJpaFileRepository fileRepository;
 
     @Autowired
     public SpringConfig(SDJpaMemberRepository memberRepository,
@@ -29,7 +34,11 @@ public class SpringConfig {
                         SDJpaTimeTableRepository timeTableRepository,
                         SDJpaSubjectRepository subjectRepository,
                         SDJpaCourseRepository courseRepository,
-                        SDJpaSchedulesRepository schedulesRepository) {
+                        SDJpaSchedulesRepository schedulesRepository,
+                        SDJpaDataCreditRepository dataCreditRepository,
+                        SDJpaLiberalArtsCreditRepository liberalArtsCreditRepository,
+                        SDJpaGeneralEducationCurriculumRepository generalEducationCurriculumRepository,
+                        SDJpaCreditRepository creditRepository, SDJpaFileRepository fileRepository) {
         this.memberRepository = memberRepository;
         this.postingRepository = postingRepository;
         this.javaMailSender = javaMailSender;
@@ -39,6 +48,11 @@ public class SpringConfig {
         this.subjectRepository = subjectRepository;
         this.courseRepository = courseRepository;
         this.schedulesRepository = schedulesRepository;
+        this.dataCreditRepository = dataCreditRepository;
+        this.liberalArtsCreditRepository = liberalArtsCreditRepository;
+        this.generalEducationCurriculumRepository = generalEducationCurriculumRepository;
+        this.creditRepository = creditRepository;
+        this.fileRepository = fileRepository;
     }
 
     @Bean
@@ -48,27 +62,44 @@ public class SpringConfig {
     }
 
     @Bean
-    public EmailService emailService(){
+    public EmailService emailService() {
         return new EmailService(javaMailSender);
     }
 
     @Bean
-    public PostingService postingService(){
+    public PostingService postingService() {
         return new PostingService(postingRepository);
     }
 
     @Bean
-    public CommentService commentService(){
+    public CommentService commentService() {
         return new CommentService(commentRepository);
     }
 
     @Bean
-    public TimeTableService timeTableService(){
-        return new TimeTableService(timeTableRepository,
-                subjectRepository, courseRepository);
+    public FileService fileService(){
+        return new FileService(fileRepository);
     }
+
     @Bean
-    public SchedulesService schedulesService(){
-        return new SchedulesService(schedulesRepository,memberRepository);
+    public TimeTableService timeTableService() {
+        return new TimeTableService(timeTableRepository,
+                subjectRepository, courseRepository, memberRepository);
+    }
+
+    @Bean
+    public SchedulesService schedulesService() {
+        return new SchedulesService(schedulesRepository, memberRepository);
+    }
+
+    @Bean
+    public CreditService creditService() {
+        return new CreditService(dataCreditRepository,
+                liberalArtsCreditRepository, generalEducationCurriculumRepository, creditRepository);
+    }
+
+    @Bean
+    public AdminService adminService() {
+        return new AdminService(postingRepository, schedulesRepository, memberRepository);
     }
 }
