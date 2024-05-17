@@ -5,91 +5,97 @@ import DeleteModal from './calendar/DeleteModal';
 import ChangeModal from './calendar/ChangeModal';
 import api from '../../utils/api';
 import Calendar from './calendar/Calendar';
+import { format, isWithinInterval, parseISO, addDays, startOfWeek, endOfWeek } from 'date-fns';
+// 1. 서버에서 schoolSchedule 이 있는지 먼저 받아온다. -> RenderDate로 넘겨줘서 그린다.
+// 2. 일정 추가 시 서버에 일정을 등록한다.
+// 3. 일정을 등록하면 다시 받아와 SchoolSchedule에 저장한다. -> RenderDate로 넘겨줘서 그린다.
+// 그럼 RenderDate는 schoolSchedule이 변경될 때마다 그리는 것이다.
+// 처음에 서버에서 그리고 변경될때마다 그리는거만 해결하면됨
 const CalendarBoard = React.forwardRef((props,ref) => {
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [isOpenChangeModal, setIsOpenChangeModal] = useState(false);
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
-
   const [schoolSchedule, setSchoolSchedule] = useState([]);
-  const [modalData, setModalData] = useState({
-    startDay: '',
-    endDay: '',
-    title: '',
-    color: '#000000',
-    errorMessage: '',
-  })
-  
-  const { startDay, endDay, title, color, errorMessage } = modalData;
 
-  // modalData를 한번에 관리할 때 set을 개개인으로 못쓰므로 change함수 만들기
-  const inputChange = (key, value) => {
-    setModalData({...modalData, [key]: value});
+  const fetchSchoolSchedule = async () => {
+    try {
+      const response = await api.get('/schedule/list/data');
+      setSchoolSchedule(response.data.data);
+    } catch (error) {
+      console.log(error.message);      
+    }
   }
 
-  const onclickCompleteBtn = async () => {
-    const regex = /^\d{4}-\d{2}-\d{2}$/;
+  useEffect(()=>{
+    fetchSchoolSchedule();
+  },[])
+  
+  const onClickCompleteBtn = async (newSchedule) => {
     try {
-      if(!startDay){
-        throw new Error("시작날짜를 입력하세요");
+      const response = await api.post('/admin/schedule/add', newSchedule);
+      if(response.status === 200){
+        const upadateSchedule = await api.get('/schedule/list/data');
+        setSchoolSchedule(upadateSchedule.data.data);
+        setIsOpenAddModal(false);
+      } else {
+        throw new Error("스케줄 추가 실패");
       }
-      if(!regex.test(startDay)){
-        throw new Error("시작날짜를 형식에 맞게 입력하세요");
-      }
-      if(!regex.test(endDay)){
-        throw new Error("종료날짜를 형식에 맞게 입력하세요");
-      }
-      if(!endDay){
-        throw new Error("종료날짜를 입력하세요");
-      }
-      if(!title){
-        throw new Error("제목을 입력하세요");
-      }
-
-      const response = await api.post('/admin/schedule/add', {startDay,endDay,title,color});
-
-      const newSchedule = {
-        startDay: response.data.data.startDay,
-        endDay: response.data.data.endDay,
-        title: response.data.data.title,
-        color: response.data.data.color,
-      }
-      setSchoolSchedule([...schoolSchedule, newSchedule]);
-      setIsOpenAddModal(false);
-      
-      setModalData({
-        startDay: '',
-        endDay: '',
-        title: '',
-        color: '#000000',
-        errorMessage: '',
-      })
     } catch (error) {
-      setModalData({...modalData, errorMessage : error.message});
+      console.log("데이터 불러오기 실패", error.message);
     }
   }
 
   const onClickCancelBtn = () => {
-    setModalData({
-      startDay: '',
-      endDay: '',
-      title: '',
-      color: '#000000',
-      errorMessage: '',
-    })
     setIsOpenAddModal(false);
+    setIsOpenChangeModal(false);
   }
+
+  const today = format(new Date(), 'yyyy-MM-dd');
+  const todaySchedules = schoolSchedule.filter(schedule =>
+      isWithinInterval(parseISO(today), {
+      start: parseISO(schedule.startDay),
+      end: parseISO(schedule.endDay)
+    })
+  );
+
+  const tomorrow = format(addDays(today,1), 'yyyy-MM-dd');
+  
+  const tomorrowSchedules = schoolSchedule.filter(schedule=>
+    isWithinInterval(parseISO(tomorrow),{
+      start: parseISO(schedule.startDay),
+      end: parseISO(schedule.endDay)
+    })
+  )
+
+
+  const startOfThisWeek = format(startOfWeek(today), 'yyyy-MM-dd');
+  const endOfThisWeek = format(endOfWeek(today), 'yyyy-MM-dd');
+  
+  const thisweekSchedules = schoolSchedule.filter(schedule=>
+    isWithinInterval(parseISO(schedule.startDay),{
+      start: parseISO(startOfThisWeek),
+      end: parseISO(endOfThisWeek)
+    })||
+    isWithinInterval(parseISO(schedule.endDay),{
+      start: parseISO(startOfThisWeek),
+      end: parseISO(endOfThisWeek)
+    })
+  )
 
   return (
     <>
       {isOpenAddModal 
         ? <AddModal 
-            {...modalData}
-            inputChange = {inputChange}
-            onclickCompleteBtn={onclickCompleteBtn}
+            onClickCompleteBtn={onClickCompleteBtn}
             onClickCancelBtn={onClickCancelBtn}
             /> 
         : null}
-      {isOpenChangeModal ? <ChangeModal setIsOpenChangeModal={setIsOpenChangeModal}/> : null}
+      {isOpenChangeModal 
+        ? <ChangeModal 
+            setIsOpenChangeModal={setIsOpenChangeModal}
+            onClickCancelBtn={onClickCancelBtn} 
+            />
+        : null}
       {isOpenDeleteModal ? <DeleteModal setIsOpenDeleteModal={setIsOpenDeleteModal}/> : null}
       <div className="contents">
         <div className="box category" ref={ref}>학과일정</div>
@@ -101,15 +107,27 @@ const CalendarBoard = React.forwardRef((props,ref) => {
             <div>
               <div className="today">
                 <div className="box category">오늘</div>
-                <div className="box">일정 없음</div>
+                <div className="box scheduleStyle">
+                  {todaySchedules.map(schedule=>{
+                    return <span style={{backgroundColor: schedule.color, color:"white", padding: '0.3rem'}}>-{schedule.title}<br></br></span>
+                  })}
+                </div>
               </div>
               <div className="tomorrow">
                 <div className="box category">내일</div>
-                <div className="box">일정 없음</div>
+                <div className="box scheduleStyle">
+                  {tomorrowSchedules.map(schedule=>{
+                    return <span style={{backgroundColor: schedule.color, color:"white", padding: '0.3rem'}}>-{schedule.title}<br></br></span>
+                  })}
+                </div>
               </div>
               <div className="thisWeek">
                 <div className="box category">이번 주</div>
-                <div className="box">일정 없음</div>
+                <div className="box scheduleStyle">
+                  {thisweekSchedules.map(schedule=>{
+                    return <span style={{backgroundColor: schedule.color, color:"white", padding: '0.3rem'}}>-{schedule.title}<br></br></span>
+                  })}
+                </div>
               </div>
             </div>
 

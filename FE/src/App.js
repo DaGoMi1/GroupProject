@@ -7,6 +7,7 @@ import RegisterPage from './pages/RegisterPage';
 import { useState, useEffect } from 'react';
 import NoticePage from './pages/NoticePage';
 function App() {
+  // false로 바꿔야함 이따가
   const [isLogin, setIsLogin] = useState(true);
   const PrivatePage = () => {
     return isLogin ? <MainPage setIsLogin={setIsLogin}/> : <Navigate to = '/loginPage'/>;
