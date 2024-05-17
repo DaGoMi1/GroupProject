@@ -20,6 +20,10 @@ ul{
   padding: 0;
 }
 
+.loginButton.disabledBtn{
+  background-color: grey;
+  cursor: default;
+}
 
 /* navbar */
 nav{

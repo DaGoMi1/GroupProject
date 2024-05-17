@@ -43,7 +43,7 @@ const LoginPage = ({setIsLogin}) => {
             <input
               type="text"
               className="input"
-              placeholder="이메일"
+              placeholder="학번"
               value={email}
               onChange={(e)=>{setEmail(e.target.value)}}
             />
