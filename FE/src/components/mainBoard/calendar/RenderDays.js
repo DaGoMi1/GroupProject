@@ -7,7 +7,7 @@ const RenderDays = () => {
   daysList.map((day)=>{
     days.push(<td className='days' key={day}>{day}</td>)
   })
-  console.log(days);
+
   return (
     <>
       <tr>
