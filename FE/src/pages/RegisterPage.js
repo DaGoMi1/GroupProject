@@ -12,7 +12,7 @@ const LoginPage = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     
-    const response = await api.post('/api/user',{username, password, password2, email, name});
+    const response = await api.post('/home/user',{username, password, password2, email, name});
     console.log(response);
   }
 

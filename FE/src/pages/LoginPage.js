@@ -20,7 +20,7 @@ const LoginPage = ({setIsLogin}) => {
         throw new Error("비밀번호를 입력하세요.");
       }
 
-      const response = await api.post('/api/user/login', {email,password});
+      const response = await api.post('/home/user/login', {email,password});
       if(response.data.admin){
         setIsLogin(true);
         navigate('/');
