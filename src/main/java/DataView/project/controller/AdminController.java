@@ -43,7 +43,7 @@ public class AdminController {
         }
     }
 
-    @PostMapping("/posting/delete")
+    @DeleteMapping("/posting/delete")
     public ResponseEntity<?> postingDelete(@RequestBody Posting posting) {
         try {
             adminService.deletePosting(posting.getId());
@@ -53,7 +53,7 @@ public class AdminController {
         }
     }
 
-    @PostMapping("/comment/delete")
+    @DeleteMapping("/comment/delete")
     public ResponseEntity<?> commentDelete(@RequestBody Comment comment) {
         try {
             adminService.deleteComment(comment.getId());
@@ -63,7 +63,7 @@ public class AdminController {
         }
     }
 
-    @PostMapping("/schedule/delete")
+    @DeleteMapping("/schedule/delete")
     public ResponseEntity<?> scheduleDelete(@RequestBody Schedules schedules) {
         try {
             adminService.deleteSchedule(schedules.getId());
@@ -78,6 +78,16 @@ public class AdminController {
         try {
             adminService.addSchedule(schedules); // 학과 스케줄 저장
             return ResponseEntity.ok().body("스케줄 저장 성공");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @PatchMapping("/schedule/update")
+    public ResponseEntity<?> scheduleUpdate(@RequestBody Schedules schedules) {
+        try {
+            adminService.updateSchedule(schedules); // 학과 스케줄 저장
+            return ResponseEntity.ok().body("스케줄 수정 성공");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }

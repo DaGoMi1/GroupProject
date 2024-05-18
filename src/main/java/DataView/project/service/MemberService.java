@@ -117,4 +117,10 @@ public class MemberService implements UserDetailsService {
         member.setEmail(request.getEmail());
         return member;
     }
+
+    public String findEmailByUsername(String username) {
+        Member member = memberRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+        return member.getEmail();
+    }
 }

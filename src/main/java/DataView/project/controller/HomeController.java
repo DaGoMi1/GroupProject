@@ -37,10 +37,10 @@ public class HomeController {
         }
     }
 
-    @PostMapping("/send-email")
+    @PostMapping("/send/email")
     public ResponseEntity<?> sendEmail(@RequestBody RegistrationRequest request) {
         try {
-            emailService.send(request.getEmail()); // 이메일 보내기
+            emailService.sendAuthCode(request.getEmail()); // 이메일 보내기
             return ResponseEntity.ok().body("이메일 전송 완료");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("이메일 전송 실패");
@@ -60,7 +60,7 @@ public class HomeController {
         }
     }
 
-    @PostMapping("/change/password")
+    @PatchMapping("/change/password")
     public ResponseEntity<?> changePassword(@RequestBody PasswordRequest request) {
         try {
             // 현재 사용자 가져오기
@@ -85,7 +85,7 @@ public class HomeController {
         }
     }
 
-    @PostMapping("/withdrawal")
+    @DeleteMapping("/withdrawal")
     public ResponseEntity<?> memberWithdrawal(@RequestBody RegistrationRequest request) {
         try {
             if (memberService.checkPassword(request.getPassword())) { // 비밀번호가 맞다면
@@ -115,6 +115,18 @@ public class HomeController {
             String studentId = memberService.getMember().getUsername();
             return ResponseEntity.ok(studentId);
         }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/send/password")
+    public ResponseEntity<?> sendPassword(@RequestBody RegistrationRequest request) {
+        try{
+            String email = memberService.findEmailByUsername(request.getUsername());
+            String temporaryPassword = emailService.sendTemporaryPassword(email);
+            memberService.updatePassword(request.getUsername(), temporaryPassword);
+            return ResponseEntity.ok("임시 비밀번호 발송 완료");
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }

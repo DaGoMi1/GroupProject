@@ -51,7 +51,7 @@ public class PostingController {
         }
     }
 
-    @PostMapping("/update")
+    @PatchMapping("/update")
     public ResponseEntity<?> updatePosting(@RequestBody Posting posting) {
         try {
             Member member = memberService.getMember();
@@ -73,7 +73,7 @@ public class PostingController {
         }
     }
 
-    @PostMapping("/delete")
+    @DeleteMapping("/delete")
     public ResponseEntity<?> postingDelete(@RequestBody Posting posting) {
         try {
             Member member = memberService.getMember(); // 현재 사용자 가져오기
@@ -100,7 +100,7 @@ public class PostingController {
         }
     }
 
-    @PostMapping("/comment/update")
+    @PatchMapping("/comment/update")
     public ResponseEntity<?> updateComment(@RequestBody Comment comment) {
         try {
             Member member = memberService.getMember(); // 현재 사용자 가져오기
@@ -119,7 +119,7 @@ public class PostingController {
     }
 
 
-    @PostMapping("/comment/delete")
+    @DeleteMapping("/comment/delete")
     public ResponseEntity<?> commentDelete(@RequestBody Comment comment) {
         try {
             Member member = memberService.getMember(); // 현재 사용자 가져오기
