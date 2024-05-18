@@ -2,6 +2,7 @@ package DataView.project.service;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 
@@ -19,7 +20,7 @@ public class EmailService {
         this.javaMailSender = javaMailSender;
     }
 
-    public void send(String email) throws MessagingException {
+    public void sendAuthCode(String email) throws MessagingException {
         String title = "한국해양대학교 Data Science 홈페이지 인증번호";
         int authCode = generateRandomCode(); // 랜덤 코드 생성
         String content = "인증번호는" + authCode + "입니다.";
@@ -60,5 +61,27 @@ public class EmailService {
     }
 
     private record AuthInfo(int authCode, Instant timestamp) {
+    }
+
+    public String sendTemporaryPassword(String email) throws MessagingException {
+        String title = "한국해양대학교 Data Science 홈페이지 임시 비밀번호";
+        String temporaryPassword = generateRandomPassword(); // 랜덤 비밀번호 생성
+        String content = "임시 비밀번호는 " + temporaryPassword + " 입니다.";
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper mailHelper = new MimeMessageHelper(message, "UTF-8");
+
+        // 여기서 email 변수가 어디에서 온 것인지 확인해주세요.
+        mailHelper.setTo(email);
+        mailHelper.setSubject(title);
+        mailHelper.setText(content);
+
+        javaMailSender.send(message);
+
+        return temporaryPassword;
+    }
+
+    private String generateRandomPassword() {
+        // 랜덤한 8자리 문자열 생성 (숫자와 문자 모두 포함)
+        return RandomStringUtils.randomAlphanumeric(8);
     }
 }

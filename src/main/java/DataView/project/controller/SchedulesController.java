@@ -36,7 +36,7 @@ public class SchedulesController {
         }
     }
 
-    @PostMapping("/update")
+    @PatchMapping("/update")
     public ResponseEntity<?> updateSchedule(@RequestBody SchedulesRequest request) {
         try {
             Member member = memberService.getMember();
@@ -47,7 +47,7 @@ public class SchedulesController {
         }
     }
 
-    @PostMapping("/delete")
+    @DeleteMapping("/delete")
     public ResponseEntity<?> deleteSchedule(@RequestBody SchedulesRequest request) {
         try {
             Member member = memberService.getMember();

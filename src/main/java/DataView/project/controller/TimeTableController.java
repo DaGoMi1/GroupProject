@@ -48,7 +48,7 @@ public class TimeTableController {
         }
     }
 
-    @PostMapping("/subject/delete")
+    @DeleteMapping("/subject/delete")
     public ResponseEntity<?> deleteSubject(@RequestBody SubjectRequest request) {
         try {
             Member member = memberService.getMember(); // 현재 사용자 가져오기
