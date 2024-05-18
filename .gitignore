@@ -25,8 +25,8 @@ bin/
 *.ipr
 out/
 !**/src/main/**/out/
+application-security.properties
 !**/src/test/**/out/
-application.properties
 
 ### NetBeans ###
 /nbproject/private/

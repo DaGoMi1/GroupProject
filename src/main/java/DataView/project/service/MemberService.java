@@ -6,7 +6,6 @@ import DataView.project.dto.CustomUserDetails;
 import DataView.project.dto.RegistrationRequest;
 import DataView.project.repository.SDJpaMemberRepository;
 import DataView.project.repository.SDJpaTimeTableRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -88,7 +87,6 @@ public class MemberService implements UserDetailsService {
         return new CustomUserDetails(member);
     }
 
-    @Transactional
     public void updatePassword(String username, String newPassword) {
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));

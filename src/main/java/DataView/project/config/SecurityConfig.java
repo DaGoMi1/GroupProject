@@ -1,20 +1,35 @@
 package DataView.project.config;
 
-import jakarta.servlet.http.HttpServletResponse;
+import DataView.project.filter.JsonUsernamePasswordAuthenticationFilter;
+import DataView.project.handler.LoginFailureHandler;
+import DataView.project.handler.LoginSuccessHandler;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 
 import java.util.Arrays;
 import java.util.Collections;
 
 @Configuration
+@RequiredArgsConstructor
 public class SecurityConfig {
+    private final ObjectMapper objectMapper;
+    private final UserDetailsService loginService;
+    private final LoginSuccessHandler loginSuccessHandler;
+    private final LoginFailureHandler loginFailureHandler;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -27,17 +42,18 @@ public class SecurityConfig {
                 );
 
         http
-                .formLogin((auth) -> auth.loginProcessingUrl("/home/user/login")
-                        .successHandler((request, response, authentication) -> { // 로그인 성공 시 핸들러
-                            response.setStatus(HttpServletResponse.SC_OK);
-                            response.getWriter().write("{\"message\": \"success\"}");
-                        })
-                        .failureHandler((request, response, exception) -> { // 로그인 실패 시 핸들러
-                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                            response.getWriter().write("{\"message\": \"fail\"}");
-                        })
-                );
+                .formLogin((auth) -> auth
+                        .successHandler(loginSuccessHandler)
+                        .failureHandler(loginFailureHandler));
 
+        http
+                .addFilterBefore(jsonUsernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .sessionManagement((auth) -> auth
+                        .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
+                        .sessionFixation().changeSessionId()
+                        .maximumSessions(1)
+                        .maxSessionsPreventsLogin(false)
+                );
         http
                 .logout((auth) -> auth
                         .logoutUrl("/home/user/logout")
@@ -48,17 +64,11 @@ public class SecurityConfig {
 
         http
                 .sessionManagement((auth) -> auth
-                        // 세션 최대 허용 시간 설정 (기본값: 30분)
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-                        .invalidSessionUrl("/login?expired=true") // 만료된 세션 리다이렉션 URL 설정
-                        .sessionFixation().migrateSession() // 세션 고정 방지를 위한 설정
-                        .maximumSessions(1) // 동시 세션 허용 개수 설정
-                        .maxSessionsPreventsLogin(false) // 동시 로그인 차단 여부 설정
-                        .expiredUrl("/login?expired=true") // 만료된 세션 리다이렉션 URL 설정
+                        .sessionFixation().changeSessionId()
+                        .maximumSessions(1)
+                        .maxSessionsPreventsLogin(false)
                 );
-        http
-                .sessionManagement((auth) -> auth
-                        .sessionFixation().changeSessionId());
 
         http
                 .csrf(AbstractHttpConfigurer::disable);
@@ -66,8 +76,8 @@ public class SecurityConfig {
         http
                 .cors(auth -> auth.configurationSource(request -> {
                             CorsConfiguration config = new CorsConfiguration();
-                            config.setAllowedOrigins(Collections.singletonList("http:~~"));
-                            config.setAllowedMethods(Arrays.asList("GET", "POST"));
+                            config.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
+                            config.setAllowedMethods(Arrays.asList("GET", "POST", "DELETE"));
                             config.setAllowCredentials(true);
                             config.setAllowedHeaders(Collections.singletonList("*"));
                             config.setMaxAge(3600L);
@@ -83,7 +93,19 @@ public class SecurityConfig {
     }
 
     @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder() {
-        return new BCryptPasswordEncoder();
+    public JsonUsernamePasswordAuthenticationFilter jsonUsernamePasswordAuthenticationFilter() {
+        JsonUsernamePasswordAuthenticationFilter jsonUsernamePasswordAuthenticationFilter = new JsonUsernamePasswordAuthenticationFilter(objectMapper, loginSuccessHandler, loginFailureHandler);
+        jsonUsernamePasswordAuthenticationFilter.setAuthenticationManager(authenticationManager());
+        return jsonUsernamePasswordAuthenticationFilter;
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+
+        provider.setPasswordEncoder(bCryptPasswordEncoder);
+        provider.setUserDetailsService(loginService);
+
+        return new ProviderManager(provider);
     }
 }
