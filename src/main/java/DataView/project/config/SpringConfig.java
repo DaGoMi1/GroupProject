@@ -2,13 +2,14 @@ package DataView.project.config;
 
 import DataView.project.repository.*;
 import DataView.project.service.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
+@RequiredArgsConstructor
 public class SpringConfig {
     private final SDJpaMemberRepository memberRepository;
     private final SDJpaPostingRepository postingRepository;
@@ -24,36 +25,6 @@ public class SpringConfig {
     private final SDJpaGeneralEducationCurriculumRepository generalEducationCurriculumRepository;
     private final SDJpaCreditRepository creditRepository;
     private final SDJpaFileRepository fileRepository;
-
-    @Autowired
-    public SpringConfig(SDJpaMemberRepository memberRepository,
-                        SDJpaPostingRepository postingRepository,
-                        JavaMailSender javaMailSender,
-                        BCryptPasswordEncoder bCryptPasswordEncoder,
-                        SDJpaCommentRepository commentRepository,
-                        SDJpaTimeTableRepository timeTableRepository,
-                        SDJpaSubjectRepository subjectRepository,
-                        SDJpaCourseRepository courseRepository,
-                        SDJpaSchedulesRepository schedulesRepository,
-                        SDJpaDataCreditRepository dataCreditRepository,
-                        SDJpaLiberalArtsCreditRepository liberalArtsCreditRepository,
-                        SDJpaGeneralEducationCurriculumRepository generalEducationCurriculumRepository,
-                        SDJpaCreditRepository creditRepository, SDJpaFileRepository fileRepository) {
-        this.memberRepository = memberRepository;
-        this.postingRepository = postingRepository;
-        this.javaMailSender = javaMailSender;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-        this.commentRepository = commentRepository;
-        this.timeTableRepository = timeTableRepository;
-        this.subjectRepository = subjectRepository;
-        this.courseRepository = courseRepository;
-        this.schedulesRepository = schedulesRepository;
-        this.dataCreditRepository = dataCreditRepository;
-        this.liberalArtsCreditRepository = liberalArtsCreditRepository;
-        this.generalEducationCurriculumRepository = generalEducationCurriculumRepository;
-        this.creditRepository = creditRepository;
-        this.fileRepository = fileRepository;
-    }
 
     @Bean
     public MemberService memberService() {
@@ -102,4 +73,5 @@ public class SpringConfig {
     public AdminService adminService() {
         return new AdminService(postingRepository, schedulesRepository, memberRepository);
     }
+
 }

@@ -1,9 +1,7 @@
 package DataView.project.controller;
 
 import DataView.project.domain.Member;
-import DataView.project.dto.AuthCodeDTO;
-import DataView.project.dto.PasswordRequest;
-import DataView.project.dto.RegistrationRequest;
+import DataView.project.dto.*;
 import DataView.project.service.EmailService;
 import DataView.project.service.MemberService;
 import org.springframework.http.HttpStatus;
@@ -18,7 +16,8 @@ public class HomeController {
     private final EmailService emailService;
     private final MemberService memberService;
 
-    public HomeController(EmailService emailService, MemberService memberService) {
+    public HomeController(EmailService emailService,
+                          MemberService memberService) {
         this.emailService = emailService;
         this.memberService = memberService;
     }
@@ -31,7 +30,7 @@ public class HomeController {
                 memberService.join(member); // DB 저장
                 return ResponseEntity.ok("회원가입 성공");
             } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("비밀번호를 불일치"); // 패스워드가 다르다면
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("비밀번호 불일치"); // 패스워드가 다르다면
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("회원가입 실패 " + e.getMessage());
@@ -52,7 +51,7 @@ public class HomeController {
     public ResponseEntity<?> checkAuthCode(@RequestBody AuthCodeDTO request) {
         try {
             if (emailService.checkAuthCode(request.getEmail(), request.getNumber())) { // 인증코드가 일치한다면
-                return ResponseEntity.ok().body("인증 성공");
+                return ResponseEntity.ok(true);
             } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("인증 실패"); // 인증코드가 불일치한다면
             }
@@ -68,7 +67,7 @@ public class HomeController {
             Member member = memberService.getMember();
 
             // 현재 비밀번호 확인
-            if (memberService.checkPassword(request.getCurrentPassword())) {
+            if (!memberService.checkPassword(request.getCurrentPassword())) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("현재 비밀번호 인증 실패");
             }
 
@@ -96,6 +95,26 @@ public class HomeController {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("비밀번호 확인 실패"); //비밀번호가 다르다면
             }
         } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/name")
+    public ResponseEntity<?> getMemberName() {
+        try{
+            String name = memberService.getMember().getName();
+            return ResponseEntity.ok(name);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/student-id")
+    public ResponseEntity<?> getStudentId() {
+        try{
+            String studentId = memberService.getMember().getUsername();
+            return ResponseEntity.ok(studentId);
+        }catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
