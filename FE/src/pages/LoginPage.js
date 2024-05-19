@@ -1,15 +1,16 @@
 import React from "react";
-import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate, Navigate } from "react-router-dom";
 import api from "../utils/api";
 
-const LoginPage = ({setIsLogin}) => {
+const LoginPage = ({user, setUser}) => {
 
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState('');
-  
+
+
   const submitEmailAndPassword = async (e) => {
     e.preventDefault();
     try {
@@ -21,18 +22,23 @@ const LoginPage = ({setIsLogin}) => {
       }
 
       const response = await api.post('/home/user/login', {email,password});
-      if(response.data.admin){
-        setIsLogin(true);
+      if(response.status === 200){
+        setUser(response.data.user);
+        sessionStorage.setItem("token", response.data.token);
+        api.defaults.headers["authorization"] = "Bearer " + response.data.token;
         navigate('/');
-      } else if (!response.data.admin){
+      } else if (response.status !== 200){
         throw new Error(response.error);
       }
     } catch (error) {
       setErrorMessage(error.message);
     }
   }
+  if(user){
+    return <Navigate to='/'/>
+  }
   return (
-    <div>
+    <div className="pageStyle">
       <div className="page">
         <div className="titleWrap">서비스를 이용하려면 로그인하세요.</div>
         <div>

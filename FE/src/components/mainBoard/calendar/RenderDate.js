@@ -7,7 +7,6 @@ const RenderDate = ({ current, schoolSchedule }) => {
 
   useEffect(() => {
     makeCalendarDate();
-    console.log(dateList);
   }, [current, schoolSchedule]); // current와 schoolSchedule이 변경될 때마다 useEffect가 호출됨
   
   console.log(schoolSchedule);
@@ -41,16 +40,12 @@ const RenderDate = ({ current, schoolSchedule }) => {
             ? 'date'
             : 'otherMonthDate';
         
-        // 현재 schoolSchedule 리스트를 받아서 시작날짜를 한 개 찾아서, 한개씩만 그리고있음
-        // -> 그냥 반복문을 돌면서 모든 객체를 다 그리는게 나을 거 같음
         const schedules = schoolSchedule.filter(schedule =>
           isWithinInterval(parseISO(key), {
             start: parseISO(schedule.startDay),
             end: parseISO(schedule.endDay)
           })
         );
-
-        // console.log(`date: ${key}`, schedules);
 
         const scheduleElements = schedules.map((schedule, index) => {
           const isStartDay = isSameDay(parseISO(schedule.startDay), parseISO(key));

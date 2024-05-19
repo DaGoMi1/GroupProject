@@ -41,26 +41,28 @@ const Sideabar = ({setIsLogin,sidebarOpen, setSidebarOpen}) => {
       <hr />
       
       <div className="sidebarMenu">
-        <Link to="/searchPassword">비밀번호 변경하기</Link>
-      </div>
-      
-      <hr />
-      
-      <div className="sidebarMenu">
-        <Link to="/calendar">캘린더 보러가기</Link>
-      </div>
-      
-      <hr />
-      
-      <div className="sidebarMenu">
-        <Link to="/titetable">시간표 보러가기</Link>
-      </div>
-      
-      <hr />
-      
-      <div className="sidebarMenu">
-        <Link to="/calculator">학점계산기</Link>
-      </div>
+            <Link to="/myPage" className="sidebarMenuLink">
+              비밀번호 변경하기
+            </Link>
+          </div>
+          <hr />
+          <div className="sidebarMenu">
+            <Link to="/myPage" className="sidebarMenuLink">
+              캘린더 보러가기
+            </Link>
+          </div>
+          <hr />
+          <div className="sidebarMenu">
+            <Link to="/myPage" className="sidebarMenuLink">
+              시간표 보러가기
+            </Link>
+          </div>
+          <hr />
+          <div className="sidebarMenu">
+            <Link to="/myPage" className="sidebarMenuLink">
+              학점 계산기
+            </Link>
+          </div>
       
       <hr />
       
