@@ -27,11 +27,11 @@ userController.userLogin = async (req, res) => {
   try {
     const {email, password} = req.body;
     const user = await User.findOne({email});
-    let admin = false;
+
     if(user){
       if(user.password === password){
-        admin = true;
-        return res.status(200).json({status:"Ok",user,admin});
+        const token = user.generateToken();        
+        return res.status(200).json({status:"Ok",user, token});
       }
     }
     throw new Error("아이디 또는 비밀번호가 일치하지 않습니다.");
@@ -40,5 +40,16 @@ userController.userLogin = async (req, res) => {
   }
 }
 
-
+userController.getUser = async(req,res) => {
+  try {
+    const {userId} = req;
+    const user = User.findById(userId);
+    if(!user){
+      throw new Error("유저 id 찾을 수 없음");
+    }
+    res.status(200).json({status: "Ok", user})
+  } catch (error) {
+    res.status(400).json({status : "fail",message : error.message})
+  }
+}
 module.exports = userController;
