@@ -4,7 +4,7 @@ import Carousel from '../components/Carousel'
 import MainBoard from '../components/MainBoard'
 import ScrolltoTop from '../components/ScrolltoTop'
 
-const MainPage = ({setIsLogin}) => {
+const MainPage = ({user, setChangeComponent}) => {
   const sectionRef = {
     noticeBoard: useRef(null),
     boardBoard: useRef(null),
@@ -14,9 +14,9 @@ const MainPage = ({setIsLogin}) => {
   }
   return (
     <>
-      <Navbar setIsLogin={setIsLogin} sectionRef={sectionRef}/>
+      <Navbar user={user} sectionRef={sectionRef} setChangeComponent={setChangeComponent}/>
       <Carousel/>
-      <MainBoard sectionRef={sectionRef}/>
+      <MainBoard sectionRef={sectionRef} setChangeComponent={setChangeComponent}/>
       <ScrolltoTop/>
     </>
   )

@@ -9,7 +9,7 @@ ScheduleController.createSchedule = async (req, res) => {
     const {startDay, endDay, title, color} = req.body
     const newSchedule = new Schedule({startDay, endDay, title, color});
     await newSchedule.save();
-    res.status(200).json({status:'ok', data: newSchedule});
+    res.status(200).json({status:'ok', newSchedule});
   } catch (error) {
     res.status(400).json({status:'fail', message:error.message});
   }
@@ -18,7 +18,7 @@ ScheduleController.createSchedule = async (req, res) => {
 ScheduleController.getSchedule = async(req,res)=>{
   try {
     const scheduleList = await Schedule.find({});
-    res.status(200).json({status:"ok", data:scheduleList});
+    res.status(200).json({status:"ok", scheduleList});
   } catch (error) {
     res.status(400).json({status:"fail", message:error.message});
   }
@@ -38,7 +38,7 @@ ScheduleController.updateSchedule = async(req, res)=>{
         }
     })
     
-    res.status(200).json({status:"ok", data: updateSchedule});
+    res.status(200).json({status:"ok", updateSchedule});
   } catch (error) {
     res.status(400).json({status:"Fail", message: error.message})
   }
@@ -48,7 +48,7 @@ ScheduleController.deleteSchedule = async(req,res)=>{
   try {
     const { _id } = req.body;
     const deleteSchedule = await Schedule.deleteOne({_id});
-    res.status(200).json({status:"ok", data: deleteSchedule});
+    res.status(200).json({status:"ok", deleteSchedule});
   } catch (error) {
     res.status(400).json({status:"fail", message: error.message});
   }

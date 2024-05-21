@@ -25,8 +25,8 @@ userController.getUser = async (req, res) => {
 userController.userLogin = async (req, res) => {
   // 입력한 email이 있는지 먼저 찾고 뒤에 그 이메일의 비밀번호를 찾음
   try {
-    const {email, password} = req.body;
-    const user = await User.findOne({email});
+    const {username, password} = req.body;
+    const user = await User.findOne({username});
 
     if(user){
       if(user.password === password){
@@ -43,7 +43,7 @@ userController.userLogin = async (req, res) => {
 userController.getUser = async(req,res) => {
   try {
     const {userId} = req;
-    const user = User.findById(userId);
+    const user = await User.findById(userId);
     if(!user){
       throw new Error("유저 id 찾을 수 없음");
     }

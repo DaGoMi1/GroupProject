@@ -2,14 +2,13 @@ import React, { useEffect } from 'react'
 import { useState } from "react";
 import { Link} from "react-router-dom";
 
-const Sideabar = ({setIsLogin,sidebarOpen, setSidebarOpen}) => {
-  
+const Sideabar = ({user,sidebarOpen, setSidebarOpen, setChangeComponent}) => {
   const onClickLogout = () => {
     const isLogout = window.confirm("정말 로그아웃 하시겠습니까?");
     if(isLogout){
-      setIsLogin(false);
+      // setIsLogin(false);
     } else {
-      setIsLogin(true);
+      // setIsLogin(true);
     }
   }
 
@@ -25,8 +24,8 @@ const Sideabar = ({setIsLogin,sidebarOpen, setSidebarOpen}) => {
         
         <div className="nameStudentNumMajor">
           <div className="nameStudentNum">
-            <div className="name">name</div>
-            <div className="studentNum">12345678</div>
+            <div className="name">{user?.name}</div>
+            <div className="studentNum">{user?.username}</div>
           </div>
           
           <div className="major">데이터사이언스전공</div>
@@ -34,7 +33,9 @@ const Sideabar = ({setIsLogin,sidebarOpen, setSidebarOpen}) => {
       </div>
 
       <div className="changeLogout">
-        <Link to='/infoChange' className="change">회원 정보 수정</Link>
+        <Link to='/myPage' className="change">
+          <button onClick={()=>{setChangeComponent("infoChange")}}>회원 정보 수정</button>
+          </Link>
         <button onClick={onClickLogout} className="logout">로그아웃</button>
       </div>
       
@@ -42,25 +43,25 @@ const Sideabar = ({setIsLogin,sidebarOpen, setSidebarOpen}) => {
       
       <div className="sidebarMenu">
             <Link to="/myPage" className="sidebarMenuLink">
-              비밀번호 변경하기
+              <button onClick={()=>{setChangeComponent("changePassword")}}>비밀번호 변경하기</button>
             </Link>
           </div>
           <hr />
           <div className="sidebarMenu">
             <Link to="/myPage" className="sidebarMenuLink">
-              캘린더 보러가기
+              <button onClick={()=>{setChangeComponent("calendar")}}>캘린더 보러가기</button>
             </Link>
           </div>
           <hr />
           <div className="sidebarMenu">
             <Link to="/myPage" className="sidebarMenuLink">
-              시간표 보러가기
+              <button onClick={()=>{setChangeComponent("timeTable")}}>시간표 보러가기</button>
             </Link>
           </div>
           <hr />
           <div className="sidebarMenu">
             <Link to="/myPage" className="sidebarMenuLink">
-              학점 계산기
+              <button onClick={()=>{setChangeComponent("calculator")}}>학점 계산기</button>
             </Link>
           </div>
       
