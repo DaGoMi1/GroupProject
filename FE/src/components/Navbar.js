@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Sideabar from './Sideabar'
 
-const Navbar = ({setIsLogin, sectionRef}) => {
+const Navbar = ({user, sectionRef, setChangeComponent}) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const moveToScroll = (ref) => {
@@ -28,7 +28,11 @@ const Navbar = ({setIsLogin, sectionRef}) => {
       </nav>
       
       {sidebarOpen 
-        ? <Sideabar sidebarOpen = {sidebarOpen} setSidebarOpen = {setSidebarOpen} setIsLogin={setIsLogin}/> 
+        ? <Sideabar 
+            sidebarOpen = {sidebarOpen} 
+            setSidebarOpen = {setSidebarOpen} 
+            user={user}
+            setChangeComponent={setChangeComponent}/> 
         : null
           }
     </>

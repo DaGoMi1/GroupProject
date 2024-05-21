@@ -1,12 +1,11 @@
 import React from "react";
 import { useState } from "react";
 import { Link, useNavigate, Navigate } from "react-router-dom";
-import api from "../utils/api";
 
 const LoginPage = ({user, setUser}) => {
 
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -14,26 +13,36 @@ const LoginPage = ({user, setUser}) => {
   const submitEmailAndPassword = async (e) => {
     e.preventDefault();
     try {
-      if(!email){
-        throw new Error("이메일을 입력하세요.");
+      if (!username) {
+        throw new Error("학번을 입력하세요.");
       }
-      if(!password){
+      if (!password) {
         throw new Error("비밀번호를 입력하세요.");
       }
-
-      const response = await api.post('/home/user/login', {email,password});
-      if(response.status === 200){
-        setUser(response.data.user);
-        sessionStorage.setItem("token", response.data.token);
-        api.defaults.headers["authorization"] = "Bearer " + response.data.token;
+  
+      const formData = new FormData();
+      formData.append('username', username);
+      formData.append('password', password);
+  
+      const response = await fetch('http://localhost:8080/home/user/login', {
+        method: 'POST',
+        body: formData,
+        credentials: 'include' // 인증 정보를 포함시키기 위해 include 설정
+      });
+  
+      if (response.ok) {
+        const data = await response.json(); // 응답 데이터를 JSON 형식으로 파싱
+        setUser(data);
         navigate('/');
-      } else if (response.status !== 200){
-        throw new Error(response.error);
+      } else {
+        throw new Error("로그인에 실패했습니다.");
       }
     } catch (error) {
       setErrorMessage(error.message);
     }
   }
+
+
   if(user){
     return <Navigate to='/'/>
   }
@@ -50,8 +59,8 @@ const LoginPage = ({user, setUser}) => {
               type="text"
               className="input"
               placeholder="학번"
-              value={email}
-              onChange={(e)=>{setEmail(e.target.value)}}
+              value={username}
+              onChange={(e)=>{setUsername(e.target.value)}}
             />
             <input
               type="password"

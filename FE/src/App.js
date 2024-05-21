@@ -11,37 +11,41 @@ import MyPage from './pages/MyPage';
 import api from './utils/api';
 import PrivatePage from './route/PrivatePage';
 
-function App() {
-  const [user, setUser] = useState(null);
-
-  const getUser = async() => {
-    try {
-      const storedToken = sessionStorage.getItem("token");
-      if(storedToken){
-        const response = await api.get("/home/name");
-        setUser(response.data.user);
-        console.log('user',user);
-      }
-    } catch (error) {
-      setUser(null);
+  function App() {
+    const [user, setUser] = useState('///');
+    const [changeComponent, setChangeComponent] = useState("");
+    
+    const getUser = async() => {
+      // try {
+      //   const response = await api.get("/home/name");
+      //   if(response.status === 200){
+      //     setUser(response.data);
+      //   } else {
+      //     setUser(null);
+      //     throw new Error(response.data);
+      //   }
+      // } catch (error) {
+      //   console.log("response.data : ", error.message);
+      // }
     }
+    useEffect(()=>{getUser()},[]);
+    useEffect(()=>{console.log('user:',user);},[user]);
+    return (
+      <>
+        <Routes>
+          <Route path ='/loginPage' element={<LoginPage user = {user} setUser={setUser}/>}/>
+          <Route path ='/searchPassword' element={<SearchPassword/>}/>
+          <Route path ='/' element={<PrivatePage user={user}>
+            <MainPage user={user} setChangeComponent={setChangeComponent}/>
+          </PrivatePage>}/>
+          <Route path='/myPage' element={<PrivatePage user={user}>
+            <MyPage user={user} setUser={setUser} changeComponent={changeComponent} setChangeComponent={setChangeComponent}/>
+          </PrivatePage>}/>
+          <Route path ='/registerPage' element={<RegisterPage/>}/>
+          <Route path='/noticePage' element={<NoticePage/>}/>
+        </Routes>
+      </>
+    );
   }
-  useEffect(()=>{getUser()},[]);
-  useEffect(()=>{console.log('user:',user);},[user]);
-  return (
-    <>
-      <Routes>
-        <Route path ='/loginPage' element={<LoginPage user = {user} setUser={setUser}/>}/>
-        <Route path ='/searchPassword' element={<SearchPassword/>}/>
-        <Route path ='/' element={<PrivatePage user={user}>
-          <MainPage/>
-        </PrivatePage>}/>
-        <Route path ='/registerPage' element={<RegisterPage/>}/>
-        <Route path='/noticePage' element={<NoticePage/>}/>
-        <Route path='/mypage' element={<MyPage/>}/>
-      </Routes>
-    </>
-  );
-}
 
-export default App;
+  export default App;
