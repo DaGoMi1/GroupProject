@@ -2,7 +2,6 @@ package DataView.project.handler;
 
 import DataView.project.dto.CustomUserDetails;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
@@ -18,7 +17,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-                                        Authentication authentication) throws IOException, ServletException {
+                                        Authentication authentication) throws IOException {
         System.out.println("세션 정보: " + request.getSession(false).getId());
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 

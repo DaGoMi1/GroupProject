@@ -6,7 +6,6 @@ import DataView.project.dto.CustomUserDetails;
 import DataView.project.dto.RegistrationRequest;
 import DataView.project.repository.SDJpaMemberRepository;
 import DataView.project.repository.SDJpaTimeTableRepository;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
