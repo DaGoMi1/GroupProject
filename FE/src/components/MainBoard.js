@@ -5,14 +5,14 @@ import MeetingBoard from './mainBoard/MeetingBoard'
 import Links from './mainBoard/Links'
 import Footer from './Footer'
 
-const MainBoard = ({sectionRef}) => {
+const MainBoard = ({sectionRef, setChangeComponent}) => {
   
   return (
     <>
       <div className="wrap">
         <div className="container">
-          <NoticeBoard ref={sectionRef.noticeBoard}/>
-          <BoardBoard ref={sectionRef.boardBoard}/>
+          <NoticeBoard ref={sectionRef.noticeBoard} setChangeComponent={setChangeComponent}/>
+          <BoardBoard ref={sectionRef.boardBoard} setChangeComponent={setChangeComponent}/>
           <CalendarBoard ref={sectionRef.calendarBoard}/>
           <MeetingBoard ref={sectionRef.meetingBoard}/>
           <Links ref={sectionRef.linkBoard}/>

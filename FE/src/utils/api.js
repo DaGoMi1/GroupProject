@@ -1,12 +1,14 @@
 import axios from "axios";
-
 const api = axios.create({
   baseURL: `http://localhost:8080/`,
+  withCredentials: true, // credentials 옵션을 true로 설정하여 인증 정보를 포함
   headers: {
     "Content-Type": "application/json",
-    authorization: "Bearer " + localStorage.getItem("token"),
+    "Authorization": "Bearer ",
   },
 });
+
+
 /**
  * console.log all requests and responses
  */

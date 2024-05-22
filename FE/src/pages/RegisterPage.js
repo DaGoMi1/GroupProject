@@ -1,7 +1,7 @@
 import React from 'react'
 import { useState } from 'react';
 import api from '../utils/api';
-
+import { useNavigate } from 'react-router-dom';
 const LoginPage = () => {
   const [username, setUsername] = useState(''); // 학번
   const [password, setPassword] = useState(''); // 비번
@@ -11,10 +11,24 @@ const LoginPage = () => {
   const [number, setNumber] = useState(''); // 인증번호
   const [isDisable, setIsDisable] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
+  const [message, setMessage] = useState('');
+
+  const navigate = useNavigate();
   const fetchAuthCode = async (event) => {
     event.preventDefault();
-    const response = await api.post('/home/send-email',{email});
-    console.log(response);
+    const regex = /^[a-zA-Z0-9._%+-]+@kmou\.ac\.kr$/;
+    try {
+      if(!email){
+        throw new Error("이메일을 입력하세요.");
+      }
+      if(!regex.test(email)){
+        throw new Error("이메일 형식이 올바르지 않습니다.");
+      }
+      const response = await api.post('/home/send/email',{email});
+      setMessage("인증번호가 발송되었습니다.");
+    } catch (error) {
+      setErrorMessage(error.message); 
+    }
   }
 
   const checkAuthCode = async (event) => {
@@ -22,6 +36,7 @@ const LoginPage = () => {
     const response = await api.post('/home/check/authCode',{email, number});
     if(response.data){
       setIsDisable(false);
+      setMessage('');
     }
   }
 
@@ -46,6 +61,7 @@ const LoginPage = () => {
 
       const response = await api.post('home/user',{username,password,password2,name,email});
       console.log(response);
+      navigate('/');
     } catch (error) {
       setErrorMessage(error.message);
     }
@@ -53,6 +69,7 @@ const LoginPage = () => {
 
   return (
     <>
+    <div className='pageStyle'>
       <div className='page'>
         <h1 className='titleWrap'>회원가입</h1>
         <div className='login_area'>
@@ -61,17 +78,18 @@ const LoginPage = () => {
             value={email} 
             type="text" 
             placeholder='이메일@kmou.ac.kr' />
-          <button onClick={fetchAuthCode} className='loginButton'>인증번호 발송</button>
+          <div className="messageWrap">{message}</div>
+          <button onClick={fetchAuthCode} className='loginButton'>{message ? '인증번호 재발송' : '인증번호 발송'}</button>
           <input
             onChange={(e)=>{setNumber(e.target.value)}} 
             value={number} 
-            type="number" 
+            type="text" 
             placeholder='인증번호' />
           <button onClick={checkAuthCode} className='loginButton'>인증번호 확인</button>
           <input 
             onChange={(e)=>{setUsername(e.target.value)}} 
             value={username} 
-            type="number" 
+            type="text" 
             placeholder='학번' />
           <input
             onChange={(e)=>{setPassword(e.target.value)}} 
@@ -97,6 +115,7 @@ const LoginPage = () => {
           </button>
         </div>
       </div>
+    </div>
     </>
   )
 }

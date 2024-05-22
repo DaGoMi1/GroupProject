@@ -6,17 +6,13 @@ import ChangeModal from './calendar/ChangeModal';
 import api from '../../utils/api';
 import Calendar from './calendar/Calendar';
 import { format, isWithinInterval, parseISO, addDays, startOfWeek, endOfWeek } from 'date-fns';
-// 1. 서버에서 schoolSchedule 이 있는지 먼저 받아온다. -> RenderDate로 넘겨줘서 그린다.
-// 2. 일정 추가 시 서버에 일정을 등록한다.
-// 3. 일정을 등록하면 다시 받아와 SchoolSchedule에 저장한다. -> RenderDate로 넘겨줘서 그린다.
-// 그럼 RenderDate는 schoolSchedule이 변경될 때마다 그리는 것이다.
-// 처음에 서버에서 그리고 변경될때마다 그리는거만 해결하면됨
+
 const CalendarBoard = React.forwardRef((props,ref) => {
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [isOpenChangeModal, setIsOpenChangeModal] = useState(false);
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
   const [schoolSchedule, setSchoolSchedule] = useState([]);
-
+  
   const fetchSchoolSchedule = async () => {
     try {
       const response = await api.get('/schedule/list/data');
@@ -47,7 +43,6 @@ const CalendarBoard = React.forwardRef((props,ref) => {
 
   const onClickCancelBtn = () => {
     setIsOpenAddModal(false);
-    setIsOpenChangeModal(false);
   }
 
   const today = format(new Date(), 'yyyy-MM-dd');
@@ -92,11 +87,18 @@ const CalendarBoard = React.forwardRef((props,ref) => {
         : null}
       {isOpenChangeModal 
         ? <ChangeModal 
+            schoolSchedule={schoolSchedule}
+            setSchoolSchedule={setSchoolSchedule}
             setIsOpenChangeModal={setIsOpenChangeModal}
-            onClickCancelBtn={onClickCancelBtn} 
             />
         : null}
-      {isOpenDeleteModal ? <DeleteModal setIsOpenDeleteModal={setIsOpenDeleteModal}/> : null}
+      {isOpenDeleteModal 
+        ? <DeleteModal 
+            schoolSchedule = {schoolSchedule}
+            setSchoolSchedule = {setSchoolSchedule}
+            setIsOpenDeleteModal={setIsOpenDeleteModal}/>        
+        : null}
+
       <div className="contents">
         <div className="box category" ref={ref}>학과일정</div>
         <div className='calendarBoard'>
