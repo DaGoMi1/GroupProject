@@ -101,21 +101,13 @@ public class HomeController {
 
     @GetMapping("/name")
     public ResponseEntity<?> getMemberName() {
-        try{
+        if(memberService.getMember()!=null){
             String name = memberService.getMember().getName();
-            return ResponseEntity.ok(name);
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
-    }
-
-    @GetMapping("/student-id")
-    public ResponseEntity<?> getStudentId() {
-        try{
             String studentId = memberService.getMember().getUsername();
-            return ResponseEntity.ok(studentId);
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            MemberInfoDTO memberInfoDTO = new MemberInfoDTO(name, studentId);
+            return ResponseEntity.ok(memberInfoDTO);
+        }else {
+            return null;
         }
     }
 
@@ -131,3 +123,5 @@ public class HomeController {
         }
     }
 }
+
+

@@ -14,7 +14,7 @@ public class SpringConfig {
     private final SDJpaMemberRepository memberRepository;
     private final SDJpaPostingRepository postingRepository;
     private final JavaMailSender javaMailSender;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final BCryptPasswordEncoder passwordEncoder;
     private final SDJpaCommentRepository commentRepository;
     private final SDJpaTimeTableRepository timeTableRepository;
     private final SDJpaSubjectRepository subjectRepository;
@@ -28,8 +28,7 @@ public class SpringConfig {
 
     @Bean
     public MemberService memberService() {
-        return new MemberService(memberRepository,
-                timeTableRepository, bCryptPasswordEncoder);
+        return new MemberService(memberRepository, timeTableRepository, passwordEncoder);
     }
 
     @Bean

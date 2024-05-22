@@ -29,12 +29,12 @@ public class MemberService implements UserDetailsService {
 
     public Member getMember() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        if (userDetails.member() != null) {
-            return userDetails.member();
-        } else {
-            throw new UsernameNotFoundException("회원을 찾을 수가 없습니다.");
+        if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails userDetails) {
+            if (userDetails.member() != null) {
+                return userDetails.member();
+            }
         }
+        return null;
     }
 
     public void join(Member member) {

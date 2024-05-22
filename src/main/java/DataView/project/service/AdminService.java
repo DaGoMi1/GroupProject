@@ -46,8 +46,8 @@ public class AdminService {
     }
 
     public void deleteSchedule(Long scheduleId) throws Exception {
-        if (postingRepository.existsById(scheduleId)) {
-            postingRepository.deleteById(scheduleId);
+        if (schedulesRepository.existsById(scheduleId)) {
+            schedulesRepository.deleteById(scheduleId);
         } else {
             throw new Exception("존재하지 않는 스케줄 아이디입니다.");
         }
