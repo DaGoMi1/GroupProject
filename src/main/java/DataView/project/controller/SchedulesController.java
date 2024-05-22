@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -72,7 +73,10 @@ public class SchedulesController {
     @GetMapping("/list/data")
     public ResponseEntity<?> listData() {
         try {
-            List<Schedules> schedulesList = schedulesService.getDataList();
+            List<Schedules> schedulesList = new ArrayList<>();
+            if (schedulesService.getDataList() != null) {
+                schedulesList = schedulesService.getDataList();
+            }
             return ResponseEntity.ok(schedulesList);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

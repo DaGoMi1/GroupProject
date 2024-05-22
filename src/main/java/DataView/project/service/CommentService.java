@@ -9,7 +9,6 @@ import java.util.Optional;
 
 public class CommentService {
     private final SDJpaCommentRepository commentRepository;
-    private MemberService memberService;
 
     public CommentService(SDJpaCommentRepository commentRepository) {
         this.commentRepository = commentRepository;
@@ -23,15 +22,12 @@ public class CommentService {
         commentRepository.save(comment);
     }
 
-    public void commentUpdate(Comment comment) throws Exception {
+    public void commentUpdate(Member member, Comment comment) throws Exception {
         // 먼저 댓글이 존재하는지 확인
         Comment existingComment = getCommentById(comment.getId());
         if (existingComment == null) {
             throw new Exception("존재하지 않는 댓글입니다.");
         }
-
-        // 현재 로그인한 회원 정보 가져오기
-        Member member = memberService.getMember();
 
         // 댓글을 작성한 회원이 맞는지 확인
         if (!existingComment.getUserId().equals(member.getUsername())) {

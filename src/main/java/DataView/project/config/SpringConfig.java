@@ -5,7 +5,9 @@ import DataView.project.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
@@ -14,7 +16,7 @@ public class SpringConfig {
     private final SDJpaMemberRepository memberRepository;
     private final SDJpaPostingRepository postingRepository;
     private final JavaMailSender javaMailSender;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final BCryptPasswordEncoder passwordEncoder;
     private final SDJpaCommentRepository commentRepository;
     private final SDJpaTimeTableRepository timeTableRepository;
     private final SDJpaSubjectRepository subjectRepository;
@@ -28,8 +30,7 @@ public class SpringConfig {
 
     @Bean
     public MemberService memberService() {
-        return new MemberService(memberRepository,
-                timeTableRepository, bCryptPasswordEncoder);
+        return new MemberService(memberRepository, timeTableRepository, passwordEncoder);
     }
 
     @Bean

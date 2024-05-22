@@ -108,7 +108,7 @@ public class PostingController {
             // 현재 사용자가 댓글 작성자인지 확인
             if (commentService.checkMemberComment(member, comment.getId())) {
                 // 댓글 수정 메서드 호출
-                commentService.commentUpdate(comment);
+                commentService.commentUpdate(member, comment);
                 return ResponseEntity.ok().body("댓글이 성공적으로 수정되었습니다.");
             } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("본인의 댓글만 수정할 수 있습니다.");

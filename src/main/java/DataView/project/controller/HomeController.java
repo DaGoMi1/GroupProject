@@ -4,8 +4,15 @@ import DataView.project.domain.Member;
 import DataView.project.dto.*;
 import DataView.project.service.EmailService;
 import DataView.project.service.MemberService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -101,21 +108,13 @@ public class HomeController {
 
     @GetMapping("/name")
     public ResponseEntity<?> getMemberName() {
-        try{
+        if(memberService.getMember()!=null){
             String name = memberService.getMember().getName();
-            return ResponseEntity.ok(name);
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
-    }
-
-    @GetMapping("/student-id")
-    public ResponseEntity<?> getStudentId() {
-        try{
             String studentId = memberService.getMember().getUsername();
-            return ResponseEntity.ok(studentId);
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            MemberInfoDTO memberInfoDTO = new MemberInfoDTO(name, studentId);
+            return ResponseEntity.ok(memberInfoDTO);
+        }else {
+            return null;
         }
     }
 
@@ -131,3 +130,5 @@ public class HomeController {
         }
     }
 }
+
+

@@ -63,7 +63,7 @@ public class AdminController {
         }
     }
 
-    @DeleteMapping("/schedule/delete")
+    @DeleteMapping("/schedule")
     public ResponseEntity<?> scheduleDelete(@RequestBody Schedules schedules) {
         try {
             adminService.deleteSchedule(schedules.getId());
@@ -83,7 +83,7 @@ public class AdminController {
         }
     }
 
-    @PatchMapping("/schedule/update")
+    @PatchMapping("/schedule")
     public ResponseEntity<?> scheduleUpdate(@RequestBody Schedules schedules) {
         try {
             adminService.updateSchedule(schedules); // 학과 스케줄 저장
