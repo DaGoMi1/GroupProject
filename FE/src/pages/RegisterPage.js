@@ -24,7 +24,7 @@ const LoginPage = () => {
       if(!regex.test(email)){
         throw new Error("이메일 형식이 올바르지 않습니다.");
       }
-      const response = await api.post('/home/send-email',{email});
+      const response = await api.post('/home/send/email',{email});
       setMessage("인증번호가 발송되었습니다.");
     } catch (error) {
       setErrorMessage(error.message); 

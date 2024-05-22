@@ -1,23 +1,24 @@
 import React from 'react'
 import { useState, useEffect } from "react";
 import api from '../utils/api';
+import { useNavigate } from 'react-router-dom';
 
 const SearchPassword = () => {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [message, setMessage] = useState('');
-
+  const navigate = useNavigate();
   const submitEmail = async () => {
     try {
-      const regex = /^[a-zA-Z0-9._%+-]+@kmou\.ac\.kr$/;
-      if(!email){
-        throw new Error("이메일을 입력하세요.");
+      if(!username){
+        throw new Error("학번을 입력하세요.");
       }
-      if(!regex.test(email)){
-        throw new Error("이메일 형식이 올바르지 않습니다.");
+      if(username.length !== 8){
+        throw new Error("학번이 올바르지 않습니다.");
       }
-      const response = await api.post('/home/send-email',{email});
+      const response = await api.post('/home/send/password',{username});
       setMessage("이메일로 임시 비밀번호를 보냈습니다.");
+      navigate('/loginPage');
     } catch (error) {
       setErrorMessage(error.message);
     }
@@ -34,9 +35,9 @@ const SearchPassword = () => {
             <input
               type="text"
               className="input"
-              placeholder="가입한 이메일"
-              value={email}
-              onChange={(e)=>{setEmail(e.target.value)}}
+              placeholder="학번"
+              value={username}
+              onChange={(e)=>{setUsername(e.target.value)}}
             />
           </div>
           {message ? <div className='messageWrap'>{message}</div> : <div className='errorMessageWrap'>{errorMessage}</div>}
