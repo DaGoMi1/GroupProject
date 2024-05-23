@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import api from '../../../utils/api';
 const ChangeModal = ({schoolSchedule,setSchoolSchedule,setIsOpenChangeModal}) => {
-  // title로 찾아서 날짜 변경정보
+
   const [title, setTitle] = useState('');
   const [changeTitle, setChangeTitle] = useState('');
   const [startDay, setStartDay] = useState('');
@@ -10,19 +10,15 @@ const ChangeModal = ({schoolSchedule,setSchoolSchedule,setIsOpenChangeModal}) =>
   const [errorMessage, setErrorMessage] = useState('');
 
   const handleCompleteBtn = async() => {
-    // 해당 스케줄의 id를 찾기
-    // id를 서버에 주고, 또 변경내용들을 주면
-    // 서버에서 해당 id에 대한 내용을 찾아서, 받은 변경내용들을 update
-    // update 후 get메서드로 schoolSChedule 업데이트
     try {
       const schedule = schoolSchedule.find(schedule => schedule.title === title);
-      const { _id } = schedule;
-      const response = await api.put(`/admin/schedule/${_id}`,{
-          startDay, endDay, color, changeTitle
+      const { id } = schedule;
+      const response = await api.patch(`/admin/schedule/update`,{
+          id, startDay, endDay, color, changeTitle
       })
       if(response.status === 200) {
         const updateSchedule = await api.get('schedule/list/data');
-        setSchoolSchedule(updateSchedule.data.data);
+        setSchoolSchedule(updateSchedule.data);
         setIsOpenChangeModal(false);
       } else {
         throw new Error("업데이트 실패");

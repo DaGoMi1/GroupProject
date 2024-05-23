@@ -1,7 +1,6 @@
 import React from 'react'
 
-const RenderDays = () => {
-  const daysList = ['일', '월', '화', '수', '목', '금', '토'];
+const RenderDays = ({daysList}) => {
   const days = [];
 
   daysList.map((day)=>{

@@ -13,7 +13,7 @@ import PrivatePage from './route/PrivatePage';
 
   function App() {
     const [user, setUser] = useState('///');
-    const [changeComponent, setChangeComponent] = useState("");
+    const [changeComponent, setChangeComponent] = useState("infoChange");
     
     const getUser = async() => {
       // try {
