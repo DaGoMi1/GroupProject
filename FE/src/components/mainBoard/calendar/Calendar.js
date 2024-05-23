@@ -8,6 +8,7 @@ import { addMonths, subMonths } from 'date-fns'
 
 const Calendar = ({schoolSchedule}) => {
   const [current, setCurrent] = useState(new Date());
+  const daysList = ['일', '월', '화', '수', '목', '금', '토'];
 
   const goPrevMonth = () => {
     setCurrent(subMonths(current,1))
@@ -21,7 +22,7 @@ const Calendar = ({schoolSchedule}) => {
       <div className='calendar'>
           <RenderHeader current={current} goNextMonth={goNextMonth} goPrevMonth={goPrevMonth}/>
         <table>
-          <RenderDays />
+          <RenderDays daysList={daysList} />
           <RenderDate current={current} schoolSchedule={schoolSchedule}/>
         </table>
       </div>
