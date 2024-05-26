@@ -22,7 +22,7 @@ public class HomeController {
         this.memberService = memberService;
     }
 
-    @PostMapping("/user")
+    @PostMapping("/user/register")
     public ResponseEntity<?> register(@RequestBody RegistrationRequest request) {
         try {
             if (memberService.matchPassword(request.getPassword(), request.getPassword2())) { // 패스워드가 같다면
