@@ -15,17 +15,17 @@ import PrivatePage from './route/PrivatePage';
     const [changeComponent, setChangeComponent] = useState("infoChange");
     
     const getUser = async() => {
-      // try {
-      //   const response = await api.get("/home/name");
-      //   if(response.status === 200){
-      //     setUser(response.data);
-      //   } else {
-      //     setUser(null);
-      //     throw new Error(response.data);
-      //   }
-      // } catch (error) {
-      //   console.log("response.data : ", error.message);
-      // }
+      try {
+        const response = await api.get("/home/name");
+        if(response.status === 200){
+          setUser(response.data);
+        } else {
+          setUser(null);
+          throw new Error(response.data);
+        }
+      } catch (error) {
+        console.log("response.data : ", error.message);
+      }
     }
     useEffect(()=>{getUser()},[]);
     useEffect(()=>{console.log('user:',user);},[user]);

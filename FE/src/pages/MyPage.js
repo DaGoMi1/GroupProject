@@ -5,10 +5,9 @@ import InfoChange from '../components/mypageMenu/infoChange/InfoChange'
 import ChangePassword from '../components/mypageMenu/changePassword/ChangePassword'
 import Calculator from '../components/mypageMenu/calculator/Calculator'
 import NoticeArea from '../components/mypageMenu/notice/NoticeArea'
-import Board from '../components/mypageMenu/board/Board'
-import BoardTable from '../components/mypageMenu/board/BoardTable'
-import UserCalendar from '../components/mypageMenu/userCalendar/UserCalendar';
+import UserCalendarBoard from '../components/mypageMenu/userCalendar/UserCalendarBoard';
 import Timetable from '../components/mypageMenu/timetable/Timetable';
+import FreeArea from '../components/mypageMenu/board/FreeArea';
 
 const MyPage = ({user, setUser, changeComponent, setChangeComponent}) => {
   return (
@@ -30,7 +29,6 @@ const MyPage = ({user, setUser, changeComponent, setChangeComponent}) => {
             {changeComponent === "notice" && <div>공지사항</div>}
             {changeComponent === "noticeContents" && <div>공지사항</div>}
             {changeComponent === "board" && <div>자유게시판</div>}
-            {changeComponent === "boardContents" && <div>자유게시판</div>}
           </div>
           <div>
             <hr className="rowHr" />
@@ -115,12 +113,11 @@ const MyPage = ({user, setUser, changeComponent, setChangeComponent}) => {
           <div className="myPageContents">
             {changeComponent === "infoChange" && <InfoChange />}
             {changeComponent === "changePassword" && <ChangePassword user={user} setUser={setUser}/>}
-            {changeComponent === "calendar" && <UserCalendar/>}
+            {changeComponent === "calendar" && <UserCalendarBoard/>}
             {changeComponent === "timeTable" && <Timetable />}
             {changeComponent === "calculator" && <Calculator />}
             {changeComponent === "notice" && <NoticeArea user={user} />}
-            {changeComponent === "board" && <Board />}
-            {/* {changeComponent === "boardContents" && <BoardContents />} */}
+            {changeComponent === "board" && <FreeArea />}
           </div>
         </div>
       </div>
