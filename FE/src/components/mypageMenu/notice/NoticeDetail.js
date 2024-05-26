@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import api from '../../../utils/api';
+import Comment from './Comment';
 
-
-const NoticeDetail = ({ postId, postList, setIsOpenPostModal, user }) => {
+const NoticeDetail = ({ getPostList,postId, postList, setIsOpenPostModal, user }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [content, setContent] = useState("");
   const [title, setTitle] = useState("");
-
+  const [comment, setComment] = useState('');
   const currentPost = postList.filter((post) => post.id === postId)[0];
   
   const onClickEditBtn = () => {
@@ -27,7 +27,6 @@ const NoticeDetail = ({ postId, postList, setIsOpenPostModal, user }) => {
       
       setIsEditing(false);
 
-      // 저장 후 다시 불러와야할지도모르겠따.
     } catch (error) {
       console.log(error.message);
     }
@@ -36,34 +35,52 @@ const NoticeDetail = ({ postId, postList, setIsOpenPostModal, user }) => {
   };
 
   
-  const onClickDeleteBtn = ( async ) => {
+  const onClickDeleteBtn = async() => {
     console.log(currentPost, user);
     try {
       const id = currentPost.id;
       const author = currentPost.author
-      // 작성자와 동일한지 체크 후 삭제 진행
-      if(author !== user){
-        throw new Error("작성자 혹은 관리자가 아닙니다.");
-      }
-      // 혹은 관리자가 맞는지 체크 후 삭제 진행
-      const response = api.delete('/posting',{ data: {id} })
-      
-      if(response.status !==200){
-        throw new Error(response.data)
-      }
+
+      const response = await api.delete('/posting',{ data: {id} })
+      getPostList();
+      setIsOpenPostModal(false);
     } catch (error) {
-      alert(error.message)
+      console.log(error.message);
     }
   }
 
   const onClickCommentBtn = async (event) => {
     event.preventDefault();
     try {
-      // 댓글 작성 로직 추가
+      
+      const response = await api.post('/posting/comment', {posting: currentPost, comment});
+      if(response.status===200){
+        getPostList();
+      }
     } catch (error) {
-      // 오류 처리
+      
     }
   };
+
+  const changeComment = async (id, comment) => {
+    try {
+      const response = await api.patch('/posting/comment',{id, comment});
+      if(response.status === 200){
+        getPostList();
+      }
+    } catch (error) {
+      
+    }
+  }
+  
+  const deleteComment = async (id) => {
+    try {
+      const response = await api.delete('/posting/comment',{data: {id}})
+      getPostList();
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
 
   return (
     <div className='modal'>
@@ -111,11 +128,17 @@ const NoticeDetail = ({ postId, postList, setIsOpenPostModal, user }) => {
           <div>
             <h2>댓글</h2>
             <div className="comment">
-              {/* 댓글 내용을 여기에 추가 */}
+              {<Comment 
+                changeComment = {changeComment}
+                deleteComment = {deleteComment}
+                currentPost={currentPost}/>}
             </div>
 
             <form onSubmit={onClickCommentBtn}>
-              <input type="text" className='inputComment' />
+              <textarea 
+                value={comment}
+                onChange = {(e)=>{setComment(e.target.value)}}
+                type="text" className='inputComment' />
               <button
                 onClick={onClickCommentBtn}
                 className='completeCommentBtn'>작성</button>

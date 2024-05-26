@@ -16,6 +16,8 @@ public class Comment {
 
     private String comment;
 
+    private String author;
+
     @ManyToOne
     @JoinColumn(name = "posting_id")
     private Posting posting;

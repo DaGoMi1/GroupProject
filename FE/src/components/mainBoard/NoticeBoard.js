@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 const NoticeBoard = React.forwardRef(({setChangeComponent},ref) => {
+  
   return (
     <div className='contents'>
       <div className="box category" ref={ref}>공지사항</div>

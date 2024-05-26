@@ -68,7 +68,7 @@ const Calculator = () => {
       <div className="calculatorWrap">
         {errorMessage 
           ? <div className="errorMessageWrap">{errorMessage}</div> 
-          : <h3>평균학점 : {averageScore} / 4.5</h3>}
+          : <h3>평균학점 : {averageScore.toFixed(2)} / 4.5</h3>}
         <table className="CalculatorTable1">
           <thead>
             <tr>

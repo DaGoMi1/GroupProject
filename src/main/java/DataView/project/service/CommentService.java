@@ -16,6 +16,7 @@ public class CommentService {
 
 
     public void commentSave(Member member, Comment comment) {
+        comment.setAuthor(member.getName());
         comment.setUserId(member.getUsername());
         comment.setCreatedDate(LocalDateTime.now());
 
@@ -36,7 +37,8 @@ public class CommentService {
 
         // 새로운 댓글 내용으로 업데이트
         existingComment.setComment(comment.getComment());
-        existingComment.setCreatedDate(comment.getCreatedDate());
+        existingComment.setAuthor(member.getName());
+        existingComment.setCreatedDate(LocalDateTime.now());
 
         // 수정된 댓글 저장
         commentRepository.save(existingComment);

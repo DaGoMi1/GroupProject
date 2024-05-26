@@ -51,7 +51,7 @@ const LoginPage = ({user, setUser}) => {
       <div className="page">
         <div className="titleWrap">서비스를 이용하려면 로그인하세요.</div>
         <div>
-          <img src="/img/logo.png" />
+          <img src="/images/logo.png" />
         </div>
         
           <form onSubmit={submitEmailAndPassword} className="login_area">

@@ -12,4 +12,5 @@ public class CommentDTO {
     private String comment;
     private String userId;
     private LocalDateTime createdDate;
+    private String author;
 }

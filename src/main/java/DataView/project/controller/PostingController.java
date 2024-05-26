@@ -39,6 +39,10 @@ public class PostingController {
             }
 
             Member member = memberService.getMember(); // 현재 사용자 가져오기
+            if ("notice".equals(boardType) && !"ROLE_ADMIN".equals(member.getRole())) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("관리자만 공지사항을 작성 가능합니다.");
+            }
+
             postingService.postSave(member, posting); // 게시글 저장
 
             return ResponseEntity.ok().body("게시글 저장 완료");
