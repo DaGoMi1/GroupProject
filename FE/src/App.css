@@ -383,12 +383,6 @@ hr {
   padding-left: 15px;
 }
 
-.logo {
-  display: flex;
-  justify-content: center;
-  margin: 50px;
-}
-
 .question {
   display: flex;
   justify-content: center;
@@ -1344,7 +1338,7 @@ input {
   /* color: white;
   background-color: #263392; */
   /* margin-left: 1rem; */
-  /* margin-bottom: 1rem; */
+  margin-bottom: 1rem;
 }
 .subject h6, .subject h5, .subject h4{
   margin: 2px;
