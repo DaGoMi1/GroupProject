@@ -2,26 +2,33 @@ import React, {useState, useEffect} from 'react'
 import api from '../../../utils/api';
 import Subject from './Subject';
 import RenderTimeTable from './RenderTimeTable';
-
+import HandleScoreModal from './HandleScoreModal';
+import AlertModal from './AlertModal';
+import SubjectList from './SubjectList';
 const Timetable = () => {
-  const [grade, setGrade] = useState('1');
+  // 평점 저장 요청도 해야함
+  const [grade, setGrade] = useState(1);
   const [semester, setSemester] = useState('first');
   const [errorMessage, setErrorMessage] = useState('');
-  const [year, setYear] = useState('2024');
+  const [year, setYear] = useState(2024);
   const [classSemester, setClassSemester] = useState('first');
   const [curriculumType, setCurriculumType] = useState('전공');
   
-
+  const [scheduleMap, setScheduleMap] = useState(new Map());
   const [scheduleList, setScheduleList] = useState([]);
   const [subjectList, setSubjectList] = useState(null);
-
+  const [hidden, setHidden] = useState('hidden');
+  const [isOpenScoreModal, setIsOpenScoreModal] = useState(false);
+  const [isOpenAlertModal, setIsOpenAlertModal] = useState(false);
   const getmyTimeTable = async () => {
     // try {
-    //   const response = await api.get('/time-table/member/list',{grade, semester});
+    //   const response = await api.get(`/time-table/member?grade=${grade}&semester=${semester}`);
     //   if(response.status === 200){
     //     setScheduleList(response.data);
+            setHidden('');
     //   } else {
     //     throw new Error(response.data);
+    //     setHidden('hidden');
     //   }
     // } catch (error) {
     //   setErrorMessage(error.message);
@@ -58,7 +65,7 @@ const Timetable = () => {
         "courseName" : "이다검의 당구레슨",
         "subjectYear" : "2",
         "credit" : "2",
-        "lectureTime" : "화1~2(공대1호관-0107)"
+        "lectureTime" : "화3~4(공대1호관-0107)"
       },
       {
         "id": 3500,
@@ -93,16 +100,18 @@ const Timetable = () => {
     ])
     // try {
     //   const semester = classSemester;
-    //   const response = await api.get(`/time-table/subject/list?
+    //   const response = await api.get(`/time-table/subject?
     //     year=${year}&
     //     semester=${semester}&
     //     curriculumType=${curriculumType}`)
+    //   setSubjectList(response.data);
+    //   
     // } catch (error) {
-      
+    //   setErrorMessage(error.message)
     // }
   }
 
-  const onClickAddSubjectBtn = async (id) => {
+  const onClickAddSubjectBtn = async (id, time) => {
     setScheduleList([
       {
         "id": 3496,
@@ -112,7 +121,8 @@ const Timetable = () => {
         "courseName" : "대학생을위한글쓰기",
         "subjectYear" : "1",
         "credit" : "2",
-        "lectureTime" : "월1~2(해사대학관-0107)"
+        "lectureTime" : "월1~2(해사대학관-0107)",
+        'grade' : 'A+'
       },
       {
         "id": 3500,
@@ -122,37 +132,73 @@ const Timetable = () => {
         "courseName" : "이다검의 당구레슨",
         "subjectYear" : "2",
         "credit" : "2",
-        "lectureTime" : "화1~2(공대1호관-0107)"
+        "lectureTime" : "화1~2(공대1호관-0107)",
+        'grade' : '',
       },
     ])
 
     // 위는 테스트 코드 아래는 완성된 코드
     
-    // const subjectId = id;
-    // try {
-    //   const response = await api.post('/time-table/subject/save',{grade,semester,subjectId})
-    //   if(response.status === 200){
-    //     getmyTimeTable(); 
-    //   } else {
-    //     throw new Error(response.data);
-    //   }
-    // } catch (error) {
-    //   console.log(error.message);
-    // }
+    try {
+      const subjectId = id;
+      const lectureTime = time;
+      const lectureDay = lectureTime[0];
+      const startTime = +lectureTime[1] + 8; 
+      const endTime = +lectureTime[3] + 8;
+
+      let hasConflict = false;
+
+      for (let time = startTime; time <= endTime; time++) {
+        const key = `${lectureDay}-${time}`;
+        if (scheduleMap.has(key)) {
+          hasConflict = true;
+          break;
+        }
+      }
+
+      if(hasConflict) {
+        setIsOpenAlertModal(true);
+        return
+      }
+      const response = await api.post('/time-table/subject',{grade,semester,subjectId})
+        if(response.status === 200){
+        getmyTimeTable(); 
+      } else {
+        throw new Error(response.data);
+      }
+    } catch (error) {
+      setErrorMessage(error.message)
+    }
   }
 
-
+  const onClickHandleScoreBtn = () => {
+    setIsOpenScoreModal(true);
+  }
   return (
     <>
+      {isOpenAlertModal
+        ? <AlertModal setIsOpenAlertModal={setIsOpenAlertModal}/>
+        : null
+      }
+      {isOpenScoreModal 
+        ? <HandleScoreModal 
+            setIsOpenScoreModal={setIsOpenScoreModal}
+            grade={grade}
+            semester={semester}
+            scheduleList={scheduleList}
+            setScheduleList={setScheduleList}
+            getmyTimeTable={getmyTimeTable}
+          /> 
+        : null}
       <div className='timeTableContainer'>
         <div className="getTimeTableWrap">
           <h3>시간표 불러오기</h3>
           <span>학년 : </span>
           <select name="학년" value={grade} onChange={(e)=>{setGrade(e.target.value)}}>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
+            <option value={1}>1</option>
+            <option value={2}>2</option>
+            <option value={3}>3</option>
+            <option value={4}>4</option>
           </select>
           <span>학기 : </span>
           <select name="학기" value={semester} onChange={(e)=>{setSemester(e.target.value)}}>
@@ -166,24 +212,23 @@ const Timetable = () => {
             onClick={getmyTimeTable}
             className='getTimeTableBtn'>불러오기
           </button>
-
+          
           <span className='errorMessageWrap'>{errorMessage}</span>
+          <button onClick={onClickHandleScoreBtn} className={`handleScoreBtn ${hidden}`}>성적보기 / 수정</button>
 
           <div className='timetable_area'>
             <div className="timeTableWrap">
-              <RenderTimeTable scheduleList={scheduleList}/>
+              <RenderTimeTable scheduleList={scheduleList} scheduleMap={scheduleMap} setScheduleMap={setScheduleMap}/>
             </div>
 
             <div className='timetable_right_area'>
               <div>
                 <h3>수강과목리스트 불러오기</h3>
                 <select name="년도" value={year} onChange={(e)=>{setYear(e.target.value)}}>
-                  <option value="2019">2019</option>
-                  <option value="2019">2020</option>
-                  <option value="2019">2021</option>
-                  <option value="2019">2022</option>
-                  <option value="2019">2023</option>
-                  <option value="2019">2024</option>
+                  <option value={2021}>2021</option>
+                  <option value={2022}>2022</option>
+                  <option value={2023}>2023</option>
+                  <option value={2024}>2024</option>
                 </select>
                 <select name="학기" value={classSemester} onChange={(e)=>{setClassSemester(e.target.value)}}>
                   <option value="first">1</option>
@@ -202,11 +247,10 @@ const Timetable = () => {
               </div>
               
               {subjectList
-                ? <div className='subject_area'>
-                    {subjectList.map((subject)=>{
-                      return <Subject subject={subject} onClickAddSubjectBtn={onClickAddSubjectBtn}/>
-                    })}
-                  </div> 
+                ? <SubjectList
+                    subjectList={subjectList}
+                    onClickAddSubjectBtn={onClickAddSubjectBtn}
+                  />
                 : null
               }
             </div>

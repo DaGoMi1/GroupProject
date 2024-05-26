@@ -4,16 +4,13 @@ import Footer from '../components/Footer';
 import InfoChange from '../components/mypageMenu/infoChange/InfoChange'
 import ChangePassword from '../components/mypageMenu/changePassword/ChangePassword'
 import Calculator from '../components/mypageMenu/calculator/Calculator'
-import Notice from '../components/mypageMenu/notice/Notice'
-import NoticeContents from '../components/mypageMenu/notice/NoticeContents'
+import NoticeArea from '../components/mypageMenu/notice/NoticeArea'
 import Board from '../components/mypageMenu/board/Board'
 import BoardTable from '../components/mypageMenu/board/BoardTable'
 import UserCalendar from '../components/mypageMenu/userCalendar/UserCalendar';
 import Timetable from '../components/mypageMenu/timetable/Timetable';
 
 const MyPage = ({user, setUser, changeComponent, setChangeComponent}) => {
-  
-
   return (
     <div>
       <NavbarWithoutUl 
@@ -121,8 +118,7 @@ const MyPage = ({user, setUser, changeComponent, setChangeComponent}) => {
             {changeComponent === "calendar" && <UserCalendar/>}
             {changeComponent === "timeTable" && <Timetable />}
             {changeComponent === "calculator" && <Calculator />}
-            {changeComponent === "notice" && <Notice />}
-            {changeComponent === "noticeContents" && <NoticeContents />}
+            {changeComponent === "notice" && <NoticeArea user={user} />}
             {changeComponent === "board" && <Board />}
             {/* {changeComponent === "boardContents" && <BoardContents />} */}
           </div>
@@ -133,6 +129,6 @@ const MyPage = ({user, setUser, changeComponent, setChangeComponent}) => {
       </div>
     </div>
   );
-};
+}
 
 export default MyPage
