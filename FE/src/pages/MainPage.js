@@ -1,6 +1,5 @@
 import React,{useRef} from 'react'
 import Navbar from '../components/Navbar'
-import Carousel from '../components/Carousel'
 import MainBoard from '../components/MainBoard'
 import ScrolltoTop from '../components/ScrolltoTop'
 
@@ -15,7 +14,7 @@ const MainPage = ({user, setChangeComponent}) => {
   return (
     <>
       <Navbar user={user} sectionRef={sectionRef} setChangeComponent={setChangeComponent}/>
-      <Carousel/>
+
       <MainBoard sectionRef={sectionRef} setChangeComponent={setChangeComponent}/>
       <ScrolltoTop/>
     </>

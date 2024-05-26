@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
 import api from '../../../utils/api';
 
-const MakePost = ({setPostList,setIsMakePostOpenModal}) => {
+const MakePost = ({getPostList,setPostList,setIsMakePostOpenModal}) => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [boardType, setBoardType] = useState('notice');
   const [errorMessage, setErrorMessage] = useState(null);
+  
   const onClickMakeCompleteBtn = async() => {
     try {
       if(!title){
@@ -17,7 +18,7 @@ const MakePost = ({setPostList,setIsMakePostOpenModal}) => {
       const response = await api.post('/posting',{title,content,boardType})
       
       if(response.status === 200){
-        setPostList(response.data);
+        getPostList();
         setIsMakePostOpenModal(false);
       }
     } catch (error) {
