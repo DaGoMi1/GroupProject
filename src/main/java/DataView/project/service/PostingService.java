@@ -54,6 +54,7 @@ public class PostingService {
         dto.setComment(comment.getComment());
         dto.setCreatedDate(comment.getCreatedDate());
         dto.setUserId(comment.getUserId());
+        dto.setAuthor(comment.getAuthor());
         return dto;
     }
 
