@@ -1,27 +1,7 @@
 import React, { useState, useEffect } from "react";
 import api from "../../../utils/api";
 const Calculator = () => {
-  const [userCredit, setUserCredit] = useState({
-    dataCreditDTO:{
-      "majorBasic" : 2,
-      "majorElective" : 12,
-      "majorCompulsory": 0,
-      "generalElective": 0,
-      "liberalArtsCompulsory":0,
-      "liberalArtsElective":2,
-      "total": 14,
-    },
-    liberalArtsCreditDTO: {
-      "globalCommunication" : 2,
-      "maritimeCulture" : 0,
-      "maritimeSportsArts" : 0,
-      "historyCulture" : 0,
-      "societyEconomy" : 0,
-      "personalDevelopment" : 2,
-      "total" : 2,
-      "rest" : 0,
-    }
-  });
+  const [userCredit, setUserCredit] = useState({});
   const [averageScore, setAverageScore] = useState(0);
   const [errorMessage, setErrorMessage] = useState(null);
   const getGpa = async () => {
@@ -68,7 +48,7 @@ const Calculator = () => {
       <div className="calculatorWrap">
         {errorMessage 
           ? <div className="errorMessageWrap">{errorMessage}</div> 
-          : <h3>평균학점 : {averageScore} / 4.5</h3>}
+          : <h3>평균학점 : {averageScore.toFixed(2)} / 4.5</h3>}
         <table className="CalculatorTable1">
           <thead>
             <tr>
@@ -108,7 +88,9 @@ const Calculator = () => {
               <td>
                 {calculateRestAndOver(userCredit?.dataCreditDTO.majorElective,24)[0]}
               </td>
-              <td>3</td>
+              <td>
+                {calculateRestAndOver(userCredit?.dataCreditDTO.majorElective,24)[1]}
+              </td>
             </tr>
             <tr>
               <td rowSpan="2">교양</td>
@@ -169,11 +151,11 @@ const Calculator = () => {
                       <td>{userCredit?.liberalArtsCreditDTO.historyCulture} / (4/5)</td>
                       <td rowSpan={2}>
                         {calculateRestAndOver(userCredit?.liberalArtsCreditDTO.historyCulture 
-                          + userCredit?.liberalArtsCreditDTO.societyEconomy , 6)[0]}
+                          + userCredit?.liberalArtsCreditDTO.societyEconomy , 9)[0]}
                       </td>
                       <td rowSpan={2}>
                         {calculateRestAndOver(userCredit?.liberalArtsCreditDTO.historyCulture 
-                          + userCredit?.liberalArtsCreditDTO.societyEconomy , 6)[1]}
+                          + userCredit?.liberalArtsCreditDTO.societyEconomy , 9)[1]}
                       </td>
                     </tr>
                     <tr>

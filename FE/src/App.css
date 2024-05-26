@@ -214,6 +214,10 @@ footer{
   font-size: 18px;
 }
 
+.userBtnBox button{
+  margin: 10px;
+}
+
 .calendar table{
   border-collapse: collapse;
   width: 100%;
@@ -383,12 +387,6 @@ hr {
   padding-left: 15px;
 }
 
-.logo {
-  display: flex;
-  justify-content: center;
-  margin: 50px;
-}
-
 .question {
   display: flex;
   justify-content: center;
@@ -489,7 +487,7 @@ input {
   display: flex;
   justify-content: center;
 }
-.scheduleModal, .scoreModal, .alertModal, .postModal{
+.scheduleModal, .makePostModal, .scoreModal, .alertModal, .postModal{
   border: 1px solid;
   border-radius: 12px;
   background-color: white;
@@ -501,9 +499,34 @@ input {
   transform: scale(0.8);
 }
 
+.makePostModal{
+  top:20%;
+  left: 30%;
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+}
+
+.contentInput{
+  width: 70%;
+  height: 200px;
+  font-size: 24px;
+}
+
+.titleInput{
+  width: 70%;
+  font-size: 24px;
+}
+
 .scoreModal{
   top: 10%;
   left: 37%;  
+}
+
+.categoryArea{
+  margin-top: 1rem;
 }
 
 .alertModal{
@@ -662,12 +685,17 @@ input {
 
 .myPageContents {
   padding-left: 23rem;
-  height: 677px;
+  height: 800px;
   padding-top: 20px;
 }
 
 .myPageBoard {
   margin: 10px;
+}
+
+.user_header{
+  height: 50px;
+  font-size: 30px;
 }
 
 .myPage {
@@ -1185,7 +1213,7 @@ input {
   margin-right: 10px;
 }
 
-.timeTableContainer select, .modalSubject_area select {
+.timeTableContainer select, .modalSubject_area select, .categoryArea select {
   padding: 5px;
   border-radius: 5px;
   border: 1px solid #ccc;
@@ -1195,7 +1223,7 @@ input {
   transition: border-color 0.3s, box-shadow 0.3s;
 }
 
-.timeTableContainer select:focus, .modalSubject_area select:focus {
+.categoryArea select:focus,.timeTableContainer select:focus, .modalSubject_area select:focus {
   border-color: #007BFF;
   box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
@@ -1213,7 +1241,7 @@ input {
   width: 150px;
 }
 
-.getTimeTableBtn, .addSubjectBtn, .handleScoreBtn, .completeCommentBtn{
+.getTimeTableBtn,.makePostBtn,.addSubjectBtn, .handleScoreBtn, .completeCommentBtn{
   background-color: #263392;
   color: white;
   padding: 8px 12px;
@@ -1230,6 +1258,11 @@ input {
   
   width: 90%;
 
+}
+
+.makePostBtn{
+  margin-top: 1rem;
+  text-align: right;
 }
 
 .completeCommentBtn{
@@ -1305,6 +1338,17 @@ input {
   align-items: center;
 }
 
+.commentDetail{
+  border: 1px solid;
+}
+
+.commentChange, .commentDelete{
+  cursor: pointer;
+  /* color: white;
+  background-color: #263392; */
+  /* margin-left: 1rem; */
+  margin-bottom: 1rem;
+}
 .subject h6, .subject h5, .subject h4{
   margin: 2px;
 }
@@ -1320,3 +1364,15 @@ input {
 .onClickPostBtn{
   cursor: pointer;
 }
+
+.userCalendarBoard{
+
+}
+
+.userCalendar_right_area{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  
+}
+

@@ -46,6 +46,7 @@ const ChangePassword = ({user, setUser}) => {
               className="changePasswordInput"
               placeholder="현재 비밀번호"
               value={currentPassword}
+              type="password"
               onChange={(e)=>{setCurrentPassword(e.target.value)}}
             />
           </div>
@@ -53,14 +54,16 @@ const ChangePassword = ({user, setUser}) => {
             <input
               className="changePasswordInput"
               placeholder="변경 비밀번호"
+              type="password"
               value={newPassword}
               onChange={(e)=>{setNewPassword(e.target.value)}}
-            />
+              />
           </div>
           <div className="changePasswordInputWrap">
             <input
               className="changePasswordInput"
               placeholder="비밀번호 확인"
+              type="password"
               value={checkPassword}
               onChange={(e)=>{setCheckPassword(e.target.value)}}
             />

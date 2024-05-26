@@ -21,124 +21,34 @@ const Timetable = () => {
   const [isOpenScoreModal, setIsOpenScoreModal] = useState(false);
   const [isOpenAlertModal, setIsOpenAlertModal] = useState(false);
   const getmyTimeTable = async () => {
-    // try {
-    //   const response = await api.get(`/time-table/member?grade=${grade}&semester=${semester}`);
-    //   if(response.status === 200){
-    //     setScheduleList(response.data);
+    try {
+      const response = await api.get(`/time-table/member?grade=${grade}&semester=${semester}`);
+      if(response.status === 200){
+        setScheduleList(response.data);
             setHidden('');
-    //   } else {
-    //     throw new Error(response.data);
-    //     setHidden('hidden');
-    //   }
-    // } catch (error) {
-    //   setErrorMessage(error.message);
-    // }
+      } else {
+        throw new Error(response.data);
+      }
+    } catch (error) {
+      setErrorMessage(error.message);
+    }
   }
 
   const getClassList = async () => {
-    setSubjectList([
-      {
-        "id": 3496,
-        "area" : "기초교양",
-        "professor" : "오영이",
-        "courseCode" : "L0002",
-        "courseName" : "대학생을위한글쓰기",
-        "subjectYear" : "1",
-        "credit" : "2",
-        "lectureTime" : "월1~2(해사대학관-0107)"
-      },
-      {
-        "id": 3500,
-        "area" : "전공필수",
-        "professor" : "이다검",
-        "courseCode" : "L0003",
-        "courseName" : "이다검의 당구레슨",
-        "subjectYear" : "2",
-        "credit" : "2",
-        "lectureTime" : "화1~2(공대1호관-0107)"
-      },
-      {
-        "id": 3500,
-        "area" : "전공필수",
-        "professor" : "이다검",
-        "courseCode" : "L0003",
-        "courseName" : "이다검의 당구레슨",
-        "subjectYear" : "2",
-        "credit" : "2",
-        "lectureTime" : "화3~4(공대1호관-0107)"
-      },
-      {
-        "id": 3500,
-        "area" : "전공필수",
-        "professor" : "이다검",
-        "courseCode" : "L0003",
-        "courseName" : "이다검의 당구레슨",
-        "subjectYear" : "2",
-        "credit" : "2",
-        "lectureTime" : "화1~2(공대1호관-0107)"
-      },
-      {
-        "id": 3500,
-        "area" : "전공필수",
-        "professor" : "이다검",
-        "courseCode" : "L0003",
-        "courseName" : "이다검의 당구레슨",
-        "subjectYear" : "2",
-        "credit" : "2",
-        "lectureTime" : "화1~2(공대1호관-0107)"
-      },
-      {
-        "id": 3500,
-        "area" : "전공필수",
-        "professor" : "이다검",
-        "courseCode" : "L0003",
-        "courseName" : "이다검의 당구레슨",
-        "subjectYear" : "2",
-        "credit" : "2",
-        "lectureTime" : "화1~2(공대1호관-0107)"
-      }
-    ])
-    // try {
-    //   const semester = classSemester;
-    //   const response = await api.get(`/time-table/subject?
-    //     year=${year}&
-    //     semester=${semester}&
-    //     curriculumType=${curriculumType}`)
-    //   setSubjectList(response.data);
-    //   
-    // } catch (error) {
-    //   setErrorMessage(error.message)
-    // }
+    try {
+      const semester = classSemester;
+      const response = await api.get(`/time-table/subject?
+        year=${year}&
+        semester=${semester}&
+        curriculumType=${curriculumType}`)
+      setSubjectList(response.data);
+      
+    } catch (error) {
+      setErrorMessage(error.message)
+    }
   }
 
   const onClickAddSubjectBtn = async (id, time) => {
-    setScheduleList([
-      {
-        "id": 3496,
-        "area" : "기초교양",
-        "professor" : "오영이",
-        "courseCode" : "L0002",
-        "courseName" : "대학생을위한글쓰기",
-        "subjectYear" : "1",
-        "credit" : "2",
-        "lectureTime" : "월1~2(해사대학관-0107)",
-        'grade' : 'A+'
-      },
-      {
-        "id": 3500,
-        "area" : "전공필수",
-        "professor" : "이다검",
-        "courseCode" : "L0003",
-        "courseName" : "이다검의 당구레슨",
-        "subjectYear" : "2",
-        "credit" : "2",
-        "lectureTime" : "화1~2(공대1호관-0107)",
-        'grade' : '',
-      },
-    ])
-
-    // 위는 테스트 코드 아래는 완성된 코드
-    
     try {
       const subjectId = id;
       const lectureTime = time;
