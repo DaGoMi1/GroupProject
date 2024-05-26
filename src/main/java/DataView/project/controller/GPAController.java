@@ -60,7 +60,7 @@ public class GPAController {
         }
     }
 
-    @PostMapping("/credit/save")
+    @PostMapping("/credit")
     public ResponseEntity<?> saveCredit(@RequestBody MemberCreditDTO memberCredit) {
         try {
             Member member = memberService.getMember(); // Member 가져오기

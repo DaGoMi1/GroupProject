@@ -24,7 +24,6 @@ public class SpringConfig {
     private final SDJpaLiberalArtsCreditRepository liberalArtsCreditRepository;
     private final SDJpaGeneralEducationCurriculumRepository generalEducationCurriculumRepository;
     private final SDJpaCreditRepository creditRepository;
-    private final SDJpaFileRepository fileRepository;
 
     @Bean
     public MemberService memberService() {
@@ -44,11 +43,6 @@ public class SpringConfig {
     @Bean
     public CommentService commentService() {
         return new CommentService(commentRepository);
-    }
-
-    @Bean
-    public FileService fileService(){
-        return new FileService(fileRepository);
     }
 
     @Bean

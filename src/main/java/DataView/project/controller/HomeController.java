@@ -37,7 +37,7 @@ public class HomeController {
         }
     }
 
-    @PostMapping("/send/email")
+    @PostMapping("/email")
     public ResponseEntity<?> sendEmail(@RequestBody RegistrationRequest request) {
         try {
             emailService.sendAuthCode(request.getEmail()); // 이메일 보내기
@@ -47,7 +47,7 @@ public class HomeController {
         }
     }
 
-    @PostMapping("/check/authCode")
+    @PostMapping("/authCode")
     public ResponseEntity<?> checkAuthCode(@RequestBody AuthCodeDTO request) {
         try {
             if (emailService.checkAuthCode(request.getEmail(), request.getNumber())) { // 인증코드가 일치한다면
@@ -60,7 +60,7 @@ public class HomeController {
         }
     }
 
-    @PatchMapping("/change/password")
+    @PatchMapping("/password")
     public ResponseEntity<?> changePassword(@RequestBody PasswordRequest request) {
         try {
             // 현재 사용자 가져오기
@@ -85,7 +85,7 @@ public class HomeController {
         }
     }
 
-    @DeleteMapping("/withdrawal")
+    @DeleteMapping("/user")
     public ResponseEntity<?> memberWithdrawal(@RequestBody RegistrationRequest request) {
         try {
             if (memberService.checkPassword(request.getPassword())) { // 비밀번호가 맞다면
@@ -111,7 +111,7 @@ public class HomeController {
         }
     }
 
-    @PostMapping("/send/password")
+    @PostMapping("/password")
     public ResponseEntity<?> sendPassword(@RequestBody RegistrationRequest request) {
         try{
             String email = memberService.findEmailByUsername(request.getUsername());

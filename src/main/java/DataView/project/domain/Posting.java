@@ -27,20 +27,13 @@ public class Posting {
     @Column(name = "content")
     private String content;
 
-    @Column(name = "link")
-    private String link;
-
     @Column(name = "created_at")
     private LocalDateTime created_at;
 
     @Column(name = "boardType")
     private String boardType;
 
-    @OneToMany(mappedBy = "posting", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "posting", cascade = CascadeType.REMOVE)
     @OrderBy("id asc")
     private List<Comment> comments;
-
-    @OneToMany(mappedBy = "posting", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-    @OrderBy("id asc")
-    private List<File> files;
 }

@@ -26,7 +26,7 @@ public class SchedulesController {
     }
 
 
-    @PostMapping("/add")
+    @PostMapping("")
     public ResponseEntity<?> schedules(@RequestBody SchedulesRequest request) {
         try {
             Member member = memberService.getMember();
@@ -37,7 +37,7 @@ public class SchedulesController {
         }
     }
 
-    @PatchMapping("/update")
+    @PatchMapping("")
     public ResponseEntity<?> updateSchedule(@RequestBody SchedulesRequest request) {
         try {
             Member member = memberService.getMember();
@@ -48,7 +48,7 @@ public class SchedulesController {
         }
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping("")
     public ResponseEntity<?> deleteSchedule(@RequestBody SchedulesRequest request) {
         try {
             Member member = memberService.getMember();
@@ -59,7 +59,7 @@ public class SchedulesController {
         }
     }
 
-    @GetMapping("/list/member")
+    @GetMapping("/member")
     public ResponseEntity<?> listMember() {
         try {
             Member member = memberService.getMember();
@@ -70,7 +70,7 @@ public class SchedulesController {
         }
     }
 
-    @GetMapping("/list/data")
+    @GetMapping("/data")
     public ResponseEntity<?> listData() {
         try {
             List<Schedules> schedulesList = new ArrayList<>();
