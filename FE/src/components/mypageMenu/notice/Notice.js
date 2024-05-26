@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-const Notice = ({id,title,content,boardType,time,author, onClickPostBtn}) => {
+const Notice = ({id,title,content,boardType,createdAt,author, onClickPostBtn}) => {
   
   return (
     <tr>
@@ -12,7 +12,7 @@ const Notice = ({id,title,content,boardType,time,author, onClickPostBtn}) => {
           >{title}</button>
         </td>
       <td className="noticeTdWriter">{author}</td>
-      <td className="noticeTdDate">{time}</td>
+      <td className="noticeTdDate">{createdAt}</td>
     </tr>
   )
 }

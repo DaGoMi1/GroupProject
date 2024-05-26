@@ -2,14 +2,16 @@ import React,{useEffect, useState} from "react";
 import api from "../../../utils/api";
 import Notice from "./Notice";
 import NoticeDetail from "./NoticeDetail";
+import MakePost from "./MakePost";
 
 const NoticeArea = ({user}) => {
   const [postList, setPostList] = useState([]);
   const [isOpenPostModal, setIsOpenPostModal] = useState(false);
   const [postId, setPostId] = useState(null);
+  const [isMakePostOpenModal, setIsMakePostOpenModal] = useState(false);
   const getPostList = async() => {
     try {
-      // const response = api.post('/posting/list', 'notice');
+      // const response = await api.post('/posting/list', {boardType : 'notice'});
       // if(response.status !== 200){
       //   throw new Error(response.data);
       // }
@@ -22,16 +24,57 @@ const NoticeArea = ({user}) => {
           title : '축구할사람',
           content : '6/1 일 학교 운동장에서 축구하실분 모집합니다.',
           boardType : 'notice',
-          time : '2024-05-26',
-          author : '정상인'
+          createdAt : '2024-05-26',
+          author : '정상인',
+          comments : [{
+            id : 6,
+            comment : '댓글테스트',
+            userId : '20215555',
+            author : "이다검",
+            createdAt : '2024-05-26',
+          },{
+            id : 7,
+            comment : '댓글테스트',
+            userId : '20215555',
+            author : "정상인",
+            createdAt : '2024-05-26',
+          },
+          {
+            id : 8,
+            comment : '댓글테스트',
+            userId : '20215555',
+            author : "권진욱",
+            createdAt : '2024-05-26',
+          },
+          {
+            id : 5,
+            comment : '댓글테스트',
+            userId : '20215555',
+            author : "권진욱",
+            createdAt : '2024-05-26',
+          },
+          {
+            id : 5,
+            comment : '댓글테스트',
+            userId : '20215555',
+            author : "권진욱",
+            createdAt : '2024-05-26',
+          }]
         },
         {
           id : 2,
           title : '농구할사람',
           content : '6/1 일 학교 운동장에서 농구하실분 모집합니다.',
           boardType : 'notice',
-          time : '2024-05-27',
-          author : '이다검'
+          createdAt : '2024-05-27',
+          author : '이다검',
+          comments : [{
+            id : 5,
+            author : '이다검',
+            conmment : '댓글테스트',
+            userId : '20215555',
+            createdAt : '2024-05-26',
+          }]
         },
       ])
     } catch (error) {
@@ -44,6 +87,7 @@ const NoticeArea = ({user}) => {
     setPostId(id);
   }
 
+
   useEffect(()=>{
     getPostList();
   },[])
@@ -55,8 +99,19 @@ const NoticeArea = ({user}) => {
               postList={postList}
               setIsOpenPostModal ={setIsOpenPostModal} 
               user = {user}
+              getPostList={getPostList}
             /> 
           : null}
+
+        {
+          isMakePostOpenModal
+            ? <MakePost
+                getPostList={getPostList}
+                setPostList = {setPostList}
+                setIsMakePostOpenModal={setIsMakePostOpenModal}
+              />
+            : null
+        }
         <table className="noticeTable">
           <thead>
             <tr>
@@ -73,12 +128,17 @@ const NoticeArea = ({user}) => {
                 title = {post.title}
                 content = {post.content}
                 boardType = {post.boardType}
-                time = {post.time}
+                createdAt = {post.createdAt}
                 author = {post.author}
                 onClickPostBtn = {onClickPostBtn}
               />
             })}
           </tbody>
+
+          <button 
+            className="makePostBtn"
+            onClick={()=>{setIsMakePostOpenModal(true)}}>글쓰기
+            </button>
         </table>
       </div>
   );
