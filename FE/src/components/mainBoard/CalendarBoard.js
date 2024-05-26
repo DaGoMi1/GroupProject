@@ -15,7 +15,7 @@ const CalendarBoard = React.forwardRef((props,ref) => {
   
   const fetchSchoolSchedule = async () => {
     try {
-      const response = await api.get('/schedule/list/data');
+      const response = await api.get('/schedule/data');
       setSchoolSchedule(response.data);
     } catch (error) {
       console.log(error.message);      
@@ -30,7 +30,7 @@ const CalendarBoard = React.forwardRef((props,ref) => {
     try {
       const response = await api.post('/admin/schedule', newSchedule);
       if(response.status === 200){
-        const upadateSchedule = await api.get('/schedule/list/data');
+        const upadateSchedule = await api.get('/schedule/data');
         setSchoolSchedule(upadateSchedule.data);
         setIsOpenAddModal(false);
       } else {
