@@ -8,7 +8,8 @@ import Notice from '../components/mypageMenu/notice/Notice'
 import NoticeContents from '../components/mypageMenu/notice/NoticeContents'
 import Board from '../components/mypageMenu/board/Board'
 import BoardTable from '../components/mypageMenu/board/BoardTable'
-
+import UserCalendar from '../components/mypageMenu/userCalendar/UserCalendar';
+import Timetable from '../components/mypageMenu/timetable/Timetable';
 
 const MyPage = ({user, setUser, changeComponent, setChangeComponent}) => {
   
@@ -117,8 +118,8 @@ const MyPage = ({user, setUser, changeComponent, setChangeComponent}) => {
           <div className="myPageContents">
             {changeComponent === "infoChange" && <InfoChange />}
             {changeComponent === "changePassword" && <ChangePassword user={user} setUser={setUser}/>}
-            {/* {changeComponent === "calendar" && <Calendar />} */}
-            {/* {changeComponent === "timeTable" && <TimeTable />} */}
+            {changeComponent === "calendar" && <UserCalendar/>}
+            {changeComponent === "timeTable" && <Timetable />}
             {changeComponent === "calculator" && <Calculator />}
             {changeComponent === "notice" && <Notice />}
             {changeComponent === "noticeContents" && <NoticeContents />}

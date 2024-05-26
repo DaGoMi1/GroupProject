@@ -155,7 +155,8 @@ nav ul{
   row-gap: 1rem;
 }
 
-.make_meetingroom,.join_meetingroom,.calendar_btn_area button{
+.make_meetingroom,.join_meetingroom,
+.calendar_btn_area button{
   background-color: #263392;
   padding: 8px 12px;
   color: white;
@@ -596,7 +597,7 @@ input {
 
 .myPageContents {
   padding-left: 23rem;
-  height: 630px;
+  height: 677px;
   padding-top: 20px;
 }
 
@@ -1111,3 +1112,115 @@ input {
   text-decoration: none;
   color: black;
 }
+
+/* timetable */
+
+.timeTableContainer span {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.timeTableContainer select {
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  margin-right: 20px;
+  font-size: 16px;
+  background-color: #f9f9f9;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.timeTableContainer select:focus {
+  border-color: #007BFF;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.timeTableContainer option {
+  padding: 10px;
+  font-size: 16px;
+}
+
+#grade-select {
+  width: 100px;
+}
+
+#semester-select {
+  width: 150px;
+}
+
+.getTimeTableBtn, .addSubjectBtn{
+  background-color: #263392;
+  color: white;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.timeTableWrap table{
+  height: 500px;
+  text-align: center;
+  border-collapse: collapse;
+  width: 100%;
+  border: 2px solid;
+}
+
+.timetable_area{
+  margin-top: 2rem;
+  display: grid;
+  grid-template-columns: 7fr 5fr;
+}
+
+.timetable_right_area{
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.timetable_right_area h3{
+  margin-top: 0;
+}
+
+.time{
+  width: 80px;
+}
+
+.timeTableWrap th{
+  border: 1px solid;
+}
+
+.timeTableWrap tr{
+  border: 1px solid;
+}
+
+.subject_area{
+  border: 2px solid;
+  margin-top: 20px;
+  height: 100%;
+  overflow-y: scroll;
+}
+
+.subject{
+  border: 1px solid;
+  display: grid;
+  grid-template-columns: 9fr 3fr;
+  padding: 0px 5px;
+}
+
+.addSubjectBtn_area{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.subject h6, .subject h5, .subject h4{
+  margin: 2px;
+}
+
+.subjectInfo > div{
+  display: flex;
+}
+
+.subjectInfo > h6{
+  margin-right: 5px;
+}
+
