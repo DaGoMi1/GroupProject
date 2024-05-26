@@ -214,6 +214,10 @@ footer{
   font-size: 18px;
 }
 
+.userBtnBox button{
+  margin: 10px;
+}
+
 .calendar table{
   border-collapse: collapse;
   width: 100%;
@@ -681,12 +685,17 @@ input {
 
 .myPageContents {
   padding-left: 23rem;
-  height: 677px;
+  height: 800px;
   padding-top: 20px;
 }
 
 .myPageBoard {
   margin: 10px;
+}
+
+.user_header{
+  height: 50px;
+  font-size: 30px;
 }
 
 .myPage {
@@ -1355,3 +1364,15 @@ input {
 .onClickPostBtn{
   cursor: pointer;
 }
+
+.userCalendarBoard{
+
+}
+
+.userCalendar_right_area{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  
+}
+
