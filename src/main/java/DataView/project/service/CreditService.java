@@ -185,8 +185,9 @@ public class CreditService {
 
     public double getAllCredit(List<Subject> subjectList) {
         // Credit가 P, NP, F 인 과목은 제외합니다.
-        subjectList.removeIf(subject -> subject.getCredit().equals("P") || subject.getCredit().equals("NP") ||
-                subject.getCredit().equals("F"));
+        subjectList.removeIf(subject -> subject.getCredits().getGrade().equals("P") ||
+                subject.getCredits().getGrade().equals("NP") ||
+                subject.getCredits().getGrade().equals("F"));
 
         // 과목별 학점과 학점 수를 저장할 Map
         Map<String, String> gradeMap = new HashMap<>(); // 학점 성적 맵
