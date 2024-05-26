@@ -2,6 +2,7 @@ package DataView.project.service;
 
 import DataView.project.domain.Member;
 import DataView.project.domain.Schedules;
+import DataView.project.dto.UpdateScheduleDTO;
 import DataView.project.repository.SDJpaMemberRepository;
 import DataView.project.repository.SDJpaPostingRepository;
 import DataView.project.repository.SDJpaSchedulesRepository;
@@ -61,17 +62,17 @@ public class AdminService {
         }
     }
 
-    public void updateSchedule(Schedules schedules) throws Exception {
-        if (schedules.getId() != null && schedules.getMember() == null) {
+    public void updateSchedule(UpdateScheduleDTO schedules) throws Exception {
+        if (schedules.getId() != null) {
             schedulesRepository.findById(schedules.getId()).ifPresent(schedule -> {
-                schedule.setTitle(schedules.getTitle());
+                schedule.setTitle(schedules.getChangeTitle());
                 schedule.setColor(schedules.getColor());
                 schedule.setStartDay(schedules.getStartDay());
                 schedule.setEndDay(schedules.getEndDay());
                 schedulesRepository.save(schedule);
             });
         } else {
-            throw new Exception("스케줄 아이디가 없거나, Member가 비어있지 않습니다.");
+            throw new Exception("스케줄 아이디가 없습니다.");
         }
     }
 }

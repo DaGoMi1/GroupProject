@@ -34,7 +34,7 @@ public class LiberalArtsCreditDTO {
             case "역사화문화" -> historyCulture;
             case "사회와경제" -> societyEconomy;
             case "인성" -> personalDevelopment;
-            default -> -1; // 해당하는 학점이 없을 경우 0을 반환하거나 예외 처리할 수 있습니다.
+            default -> -1; // 해당하는 학점이 없을 경우 -1을 반환하거나 예외 처리할 수 있습니다.
         };
     }
 }

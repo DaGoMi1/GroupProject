@@ -1,13 +1,17 @@
 package DataView.project.service;
 
+import DataView.project.domain.Comment;
 import DataView.project.domain.Member;
 import DataView.project.domain.Posting;
+import DataView.project.dto.CommentDTO;
+import DataView.project.dto.PostingDTO;
 import DataView.project.repository.SDJpaPostingRepository;
 import jakarta.transaction.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Transactional
@@ -26,8 +30,31 @@ public class PostingService {
         postingRepository.save(posting);
     }
 
-    public List<Posting> findListByBoardType(String boardType) {
-        return postingRepository.findAllByBoardType(boardType);
+    public List<PostingDTO> findListByBoardType(String boardType) {
+        List<Posting> postings = postingRepository.findAllByBoardTypeWithComments(boardType);
+        return postings.stream().map(this::convertToDTO).collect(Collectors.toList());
+    }
+
+    private PostingDTO convertToDTO(Posting posting) {
+        PostingDTO dto = new PostingDTO();
+        dto.setId(posting.getId());
+        dto.setUserId(posting.getUserId());
+        dto.setTitle(posting.getTitle());
+        dto.setAuthor(posting.getAuthor());
+        dto.setContent(posting.getContent());
+        dto.setBoardType(posting.getBoardType());
+        dto.setCreatedAt(posting.getCreated_at());
+        dto.setComments(posting.getComments().stream().map(this::convertToDTO).collect(Collectors.toList()));
+        return dto;
+    }
+
+    private CommentDTO convertToDTO(Comment comment) {
+        CommentDTO dto = new CommentDTO();
+        dto.setId(comment.getId());
+        dto.setComment(comment.getComment());
+        dto.setCreatedDate(comment.getCreatedDate());
+        dto.setUserId(comment.getUserId());
+        return dto;
     }
 
     public Posting getPostingById(Long id) {
@@ -58,7 +85,6 @@ public class PostingService {
             // 요청으로 받은 값으로 게시글 정보 업데이트
             existingPosting.setTitle(posting.getTitle());
             existingPosting.setContent(posting.getContent());
-            existingPosting.setLink(posting.getLink());
 
             // 수정 시간을 현재 시간으로 업데이트
             existingPosting.setCreated_at(LocalDateTime.now());

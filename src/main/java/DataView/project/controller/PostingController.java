@@ -4,16 +4,14 @@ import DataView.project.domain.Comment;
 import DataView.project.domain.Member;
 import DataView.project.domain.Posting;
 import DataView.project.dto.BoardTypeRequest;
+import DataView.project.dto.PostingDTO;
 import DataView.project.service.CommentService;
-import DataView.project.service.FileService;
 import DataView.project.service.MemberService;
 import DataView.project.service.PostingService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -22,18 +20,16 @@ public class PostingController {
     private final PostingService postingService;
     private final CommentService commentService;
     private final MemberService memberService;
-    private final FileService fileService;
 
     public PostingController(PostingService postingService,
                              CommentService commentService,
-                             MemberService memberService, FileService fileService) {
+                             MemberService memberService) {
         this.postingService = postingService;
         this.commentService = commentService;
         this.memberService = memberService;
-        this.fileService = fileService;
     }
 
-    @PostMapping("/save")
+    @PostMapping("")
     public ResponseEntity<?> savePosting(@RequestBody Posting posting) {
         try {
             String boardType = posting.getBoardType(); // BoardType 변수에 저장
@@ -51,7 +47,7 @@ public class PostingController {
         }
     }
 
-    @PatchMapping("/update")
+    @PatchMapping("")
     public ResponseEntity<?> updatePosting(@RequestBody Posting posting) {
         try {
             Member member = memberService.getMember();
@@ -66,14 +62,14 @@ public class PostingController {
     public ResponseEntity<?> postingList(@RequestBody BoardTypeRequest request) {
         try {
             // BoardType에 맞는 게시글 리스트 가져오기
-            List<Posting> postings = postingService.findListByBoardType(request.getBoardType());
+            List<PostingDTO> postings = postingService.findListByBoardType(request.getBoardType());
             return ResponseEntity.ok().body(postings);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("게시글 저장 실패: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("게시글 불러오기 실패: " + e.getMessage());
         }
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping("")
     public ResponseEntity<?> postingDelete(@RequestBody Posting posting) {
         try {
             Member member = memberService.getMember(); // 현재 사용자 가져오기
@@ -89,7 +85,7 @@ public class PostingController {
         }
     }
 
-    @PostMapping("/comment/save")
+    @PostMapping("/comment")
     public ResponseEntity<?> saveComment(@RequestBody Comment comment) {
         try {
             Member member = memberService.getMember(); // 현재 사용자 가져오기
@@ -100,7 +96,7 @@ public class PostingController {
         }
     }
 
-    @PatchMapping("/comment/update")
+    @PatchMapping("/comment")
     public ResponseEntity<?> updateComment(@RequestBody Comment comment) {
         try {
             Member member = memberService.getMember(); // 현재 사용자 가져오기
@@ -119,7 +115,7 @@ public class PostingController {
     }
 
 
-    @DeleteMapping("/comment/delete")
+    @DeleteMapping("/comment")
     public ResponseEntity<?> commentDelete(@RequestBody Comment comment) {
         try {
             Member member = memberService.getMember(); // 현재 사용자 가져오기
@@ -132,30 +128,6 @@ public class PostingController {
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("댓글 삭제 실패: " + e.getMessage());
-        }
-    }
-
-
-    @PostMapping("/file/update")
-    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("postId") Long postId) {
-        try {
-            // 이미지 파일 저장 및 DB에 정보 저장
-            fileService.saveFile(file, postId);
-
-            return ResponseEntity.ok("이미지 업로드 및 저장 완료");
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("이미지 업로드 실패: " + e.getMessage());
-        }
-
-    }
-    @DeleteMapping("/file/delete/{fileId}")
-    public ResponseEntity<?> deleteFile(@PathVariable Long fileId) {
-        try {
-            fileService.deleteFile(fileId);
-            return ResponseEntity.ok().body("파일 삭제 완료");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("파일 삭제 실패: " + e.getMessage());
         }
     }
 }

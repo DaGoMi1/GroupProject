@@ -39,4 +39,6 @@ public class SubjectDTO {
     private String credit; // 과목 학점
 
     private String lectureTime; //강의 시간
+
+    private String grade; // 학점 정보
 }

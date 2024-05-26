@@ -4,6 +4,7 @@ import DataView.project.domain.Comment;
 import DataView.project.domain.Member;
 import DataView.project.domain.Posting;
 import DataView.project.domain.Schedules;
+import DataView.project.dto.UpdateScheduleDTO;
 import DataView.project.service.AdminService;
 import DataView.project.service.MemberService;
 import org.springframework.http.HttpStatus;
@@ -43,7 +44,7 @@ public class AdminController {
         }
     }
 
-    @DeleteMapping("/posting/delete")
+    @DeleteMapping("/posting")
     public ResponseEntity<?> postingDelete(@RequestBody Posting posting) {
         try {
             adminService.deletePosting(posting.getId());
@@ -53,7 +54,7 @@ public class AdminController {
         }
     }
 
-    @DeleteMapping("/comment/delete")
+    @DeleteMapping("/comment")
     public ResponseEntity<?> commentDelete(@RequestBody Comment comment) {
         try {
             adminService.deleteComment(comment.getId());
@@ -73,7 +74,7 @@ public class AdminController {
         }
     }
 
-    @PostMapping("/schedule/add")
+    @PostMapping("/schedule")
     public ResponseEntity<?> scheduleAdd(@RequestBody Schedules schedules) {
         try {
             adminService.addSchedule(schedules); // 학과 스케줄 저장
@@ -84,7 +85,7 @@ public class AdminController {
     }
 
     @PatchMapping("/schedule")
-    public ResponseEntity<?> scheduleUpdate(@RequestBody Schedules schedules) {
+    public ResponseEntity<?> scheduleUpdate(@RequestBody UpdateScheduleDTO schedules) {
         try {
             adminService.updateSchedule(schedules); // 학과 스케줄 저장
             return ResponseEntity.ok().body("스케줄 수정 성공");

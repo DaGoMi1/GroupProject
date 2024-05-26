@@ -26,7 +26,7 @@ public class TimeTableController {
         this.memberService = memberService;
     }
 
-    @PostMapping("/subject/save")
+    @PostMapping("/subject")
     public ResponseEntity<?> saveSubject(@RequestBody SubjectRequest request) {
         try {
             Member member = memberService.getMember(); // 현재 사용자 가져오기
@@ -48,7 +48,7 @@ public class TimeTableController {
         }
     }
 
-    @DeleteMapping("/subject/delete")
+    @DeleteMapping("/subject")
     public ResponseEntity<?> deleteSubject(@RequestBody SubjectRequest request) {
         try {
             Member member = memberService.getMember(); // 현재 사용자 가져오기
@@ -66,7 +66,7 @@ public class TimeTableController {
         }
     }
 
-    @GetMapping("/member/list")
+    @GetMapping("/member")
     public ResponseEntity<?> getMemberList(@RequestParam int grade, @RequestParam String semester) {
         try {
             Member member = memberService.getMember(); // 현재 사용자 가져오기
@@ -79,7 +79,7 @@ public class TimeTableController {
         }
     }
 
-    @GetMapping("/subject/list")
+    @GetMapping("/subject")
     public ResponseEntity<?> getSubjectList(@RequestParam int year,
                                             @RequestParam String semester,
                                             @RequestParam String curriculumType) {

@@ -79,6 +79,12 @@ public class TimeTableService {
             subjectDTO.setCredit(subject.getCredit());
             subjectDTO.setLectureTime(subject.getLectureTime());
 
+            if (subject.getCredits() == null) {
+                subjectDTO.setGrade("");
+            } else {
+                subjectDTO.setGrade(subject.getCredits().getGrade());
+            }
+
             subjectDTOList.add(subjectDTO);
         }
         return subjectDTOList;

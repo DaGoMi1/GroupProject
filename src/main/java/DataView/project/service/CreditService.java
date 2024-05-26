@@ -77,7 +77,6 @@ public class CreditService {
             int memberCredit = liberalArtsCreditDTO.getCreditBySubArea(subject.getSubArea());
             int universityCredit = liberalArtsCreditRepository.findFieldValueByIdAndFieldName(1L, subject.getSubArea());
 
-
             boolean checkCourse = generalEducationCurriculumRepository.
                     findByYearAndCourseCode(year, subject.getCourseCode()) == null;
 
@@ -205,6 +204,9 @@ public class CreditService {
         // 각 과목에 대해 학점과 학점 수를 맵에 저장합니다.
         for (Subject subject : subjectList) {
             Credit credit = creditRepository.findBySubject(subject);
+            if (credit == null) {
+                continue;
+            }
             gradeMap.put(subject.getCourseCode(), credit.getGrade());
 
             String creditString = subject.getCredit();

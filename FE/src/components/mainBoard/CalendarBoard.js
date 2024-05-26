@@ -28,7 +28,7 @@ const CalendarBoard = React.forwardRef((props,ref) => {
   
   const onClickCompleteBtn = async (newSchedule) => {
     try {
-      const response = await api.post('/admin/schedule/add', newSchedule);
+      const response = await api.post('/admin/schedule', newSchedule);
       if(response.status === 200){
         const upadateSchedule = await api.get('/schedule/list/data');
         setSchoolSchedule(upadateSchedule.data);
