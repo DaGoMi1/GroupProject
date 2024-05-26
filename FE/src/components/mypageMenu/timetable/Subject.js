@@ -17,7 +17,7 @@ const Subject = ({subject,onClickAddSubjectBtn}) => {
         </div>
         <div className='addSubjectBtn_area'>
           <button
-            onClick={()=>{onClickAddSubjectBtn(subject.id)}} 
+            onClick={()=>{onClickAddSubjectBtn(subject.id, subject.lectureTime)}}  
             className='addSubjectBtn'>추가하기</button>
         </div>
       </div>

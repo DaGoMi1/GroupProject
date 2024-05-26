@@ -10,9 +10,9 @@ const DeleteModal = ({schoolSchedule,setIsOpenDeleteModal, setSchoolSchedule}) =
       if(!schedule){
         throw new Error("해당 일정을 찾을 수 없습니다.")
       }
-      const { _id } = schedule;
+      const { id } = schedule;
       const response = await api.delete('/admin/schedule', {
-        data: {_id}
+        data: {id}
       });
 
       if(response.status === 200){

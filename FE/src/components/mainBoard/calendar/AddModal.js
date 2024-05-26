@@ -33,7 +33,7 @@ const AddModal = ({onClickCompleteBtn,onClickCancelBtn}) => {
       setErrorMessage(error.message);
     }
   };
-  return (
+  return(
     <div className='modal'>
       <div className='modalOverlay'></div>
       <div className='scheduleModal'>
