@@ -19,7 +19,7 @@ const Sideabar = ({user,sidebarOpen, setSidebarOpen, setChangeComponent}) => {
 
       <div className="userInfo">
         <div className="photoWrap">
-          <img className="photo" src="img/증사아이콘.jpeg" />
+          <img className="photo" src="images/profile.png" />
         </div>
         
         <div className="nameStudentNumMajor">
@@ -66,10 +66,6 @@ const Sideabar = ({user,sidebarOpen, setSidebarOpen, setChangeComponent}) => {
           </div>
       
       <hr />
-      
-      <div className="logo">
-        <img src="img/logo.png" />
-      </div>
       
       <div className="question">문의 : sanginjeong07@gmail.com</div>
     </div>
