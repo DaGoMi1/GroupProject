@@ -13,7 +13,7 @@ const ChangeModal = ({schoolSchedule,setSchoolSchedule,setIsOpenChangeModal}) =>
     try {
       const schedule = schoolSchedule.find(schedule => schedule.title === title);
       const { id } = schedule;
-      const response = await api.patch(`/admin/schedule/update`,{
+      const response = await api.patch(`/admin/schedule`,{
           id, startDay, endDay, color, changeTitle
       })
       if(response.status === 200) {

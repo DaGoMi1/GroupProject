@@ -489,7 +489,7 @@ input {
   display: flex;
   justify-content: center;
 }
-.scheduleModal{
+.scheduleModal, .scoreModal, .alertModal, .postModal{
   border: 1px solid;
   border-radius: 12px;
   background-color: white;
@@ -500,6 +500,51 @@ input {
   z-index: 9999;
   transform: scale(0.8);
 }
+
+.scoreModal{
+  top: 10%;
+  left: 37%;  
+}
+
+.alertModal{
+  top: 30%;
+  text-align: center;  
+}
+
+.postModal{
+  top: 10%;
+  left: 20%;
+  width: 70%;
+  height: 600px;
+  display: grid;
+  grid-template-rows: 1fr 11fr;
+}
+
+.postArea{
+  display: grid;
+  grid-template-columns: 6fr 5fr;
+  column-gap: 1rem;
+}
+
+.postTitle{
+  text-align: center;
+}
+
+.contentBox{
+  border: 1px solid;
+  height: 70%;
+  text-align: left;
+  /* padding: 6px 8px; */
+  font-size: 24px;
+}
+
+.modalSubject_area{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+
 
 .scheduleModal.deleteModal{
   top: 30%;
@@ -523,7 +568,7 @@ input {
   width: 30%;
 }
 
-.completeBtn, .cancelBtn{
+.completeBtn, .cancelBtn,.onClickCheckBtn,.exitBtn{
   background-color: #263392;
   border-radius: 12px;
   color: white;
@@ -532,6 +577,26 @@ input {
   width: 5rem;
   cursor: pointer;
 }
+
+.exitBtn{
+  margin: 0;
+}
+
+.comment{
+  border: 1px solid;
+  height: 300px;
+  overflow-y: scroll;
+}
+
+.inputComment{
+  border-radius: 0px;
+  margin-left: 0;
+  margin-top: 1.7rem;
+  font-size: 24px;
+  height: 50px;
+  width: 80%;
+}
+
 
 /* SearchPassword */
 .searchPasswordWrap {
@@ -1064,7 +1129,7 @@ input {
   border-right: 0;
 }
 
-.noticeTdIndex {
+.noticeTdIndex, .noticeTdNumber {
   width: 80px;
   text-align: center;
 }
@@ -1120,7 +1185,7 @@ input {
   margin-right: 10px;
 }
 
-.timeTableContainer select {
+.timeTableContainer select, .modalSubject_area select {
   padding: 5px;
   border-radius: 5px;
   border: 1px solid #ccc;
@@ -1130,7 +1195,7 @@ input {
   transition: border-color 0.3s, box-shadow 0.3s;
 }
 
-.timeTableContainer select:focus {
+.timeTableContainer select:focus, .modalSubject_area select:focus {
   border-color: #007BFF;
   box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
@@ -1148,12 +1213,35 @@ input {
   width: 150px;
 }
 
-.getTimeTableBtn, .addSubjectBtn{
+.getTimeTableBtn, .addSubjectBtn, .handleScoreBtn, .completeCommentBtn{
   background-color: #263392;
   color: white;
   padding: 8px 12px;
   cursor: pointer;
   font-size: 12px;
+}
+
+.editBox{
+  height: 95%;
+  margin: 0;
+  border-radius: 0;
+  border: none;
+  font-size: 24px;
+  
+  width: 90%;
+
+}
+
+.completeCommentBtn{
+  /* padding: 0; */
+  height: 70px;
+  position: relative;
+  top: -2px;
+  width: 13%;
+}
+
+.handleScoreBtn.hidden{
+  display: none;
 }
 
 .timeTableWrap table{
@@ -1192,10 +1280,15 @@ input {
   border: 1px solid;
 }
 
+.timeTableWrap td{
+  width: 100px;
+  height: 50px;
+}
+
 .subject_area{
   border: 2px solid;
   margin-top: 20px;
-  height: 100%;
+  height: 412px;
   overflow-y: scroll;
 }
 
@@ -1224,3 +1317,6 @@ input {
   margin-right: 5px;
 }
 
+.onClickPostBtn{
+  cursor: pointer;
+}

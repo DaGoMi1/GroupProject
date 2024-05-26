@@ -5,14 +5,13 @@ import {Route, Routes, Navigate} from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import { useState, useEffect } from 'react';
-import NoticePage from './pages/NoticePage';
 import SearchPassword from './pages/SearchPassword';
 import MyPage from './pages/MyPage';
 import api from './utils/api';
 import PrivatePage from './route/PrivatePage';
 
   function App() {
-    const [user, setUser] = useState('///');
+    const [user, setUser] = useState('정상인');
     const [changeComponent, setChangeComponent] = useState("infoChange");
     
     const getUser = async() => {
@@ -42,7 +41,7 @@ import PrivatePage from './route/PrivatePage';
             <MyPage user={user} setUser={setUser} changeComponent={changeComponent} setChangeComponent={setChangeComponent}/>
           </PrivatePage>}/>
           <Route path ='/registerPage' element={<RegisterPage/>}/>
-          <Route path='/noticePage' element={<NoticePage/>}/>
+
         </Routes>
       </>
     );
